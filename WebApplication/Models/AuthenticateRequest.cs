@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class User
+    public class AuthenticateRequest
     {
-        public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+
+        [Required]
         public string Password { get; set; }
     }
 }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.Identity;
 using WebApplication.Models;
 
 namespace WebApplication
@@ -31,7 +32,7 @@ namespace WebApplication
             services.AddCors(); // добавляем сервисы CORS
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(connection));
 
             // установка конфигурации подключения
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

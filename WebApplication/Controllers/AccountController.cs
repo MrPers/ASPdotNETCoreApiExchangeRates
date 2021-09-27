@@ -1,7 +1,8 @@
-﻿
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WebApplication.Models;
+using WebApplication.Services;
 
 namespace WebApplication.Controllers
 {
@@ -9,29 +10,43 @@ namespace WebApplication.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private ApplicationContext db;
-        public AccountController(ApplicationContext context)
+        private readonly IUserService _userService;
+
+        public AccountController(IUserService userService)
         {
-            db = context;
+            _userService = userService;
+        }
+
+        [HttpPost("authenticate")]
+        public IActionResult Authenticate(AuthenticateRequest model)
+        {
+            var response = _userService.Authenticate(model);
+
+            if (response == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(response);
         }
 
         [HttpPost("regist")]
-        public async Task<ActionResult<User>> Regist(User user)
+        public async Task<IActionResult> Register(UserModel userModel)
         {
-            if (user == null)
+            var response = await _userService.Register(userModel);
+
+            if (response == null)
             {
-                return BadRequest();
+                return BadRequest(new { message = "Didn't register!" });
             }
 
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
-            return Ok(new { user.Id, user.Name });
+            return Ok(response);
         }
 
-        //[HttpPost("auth")]
-        //public async Task<ActionResult<User>> Auth()
-        //{
-        //    return Ok();
-        //}
+        [Authorize]//
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _userService.GetAll();
+            return Ok(users);
+        }
     }
 }

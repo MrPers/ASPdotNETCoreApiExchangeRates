@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Abp.Web.Common" Version="6.4.0" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
   </ItemGroup>
 

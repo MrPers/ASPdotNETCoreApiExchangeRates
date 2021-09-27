@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using WebApplication.Entities;
 using WebApplication.Models;
 
 namespace WebAppi.Controllers
@@ -9,6 +11,7 @@ namespace WebAppi.Controllers
     public class ValutaController : ControllerBase
     {
 
+        //[Authorize]
         [HttpGet("{value}")]   //  /api/Valuta/data
         public IActionResult SetFavorite(string value)
         {
@@ -33,11 +36,11 @@ namespace WebAppi.Controllers
                 default:
                     return NotFound();
             }
-            DataChart[] dataChart = new DataChart[random.Next(30,200)];
+            DataChartModel[] dataChart = new DataChartModel[random.Next(30,200)];
             DateTime date = DateTime.UtcNow.AddDays(-(dataChart.Length));
             for (int i = 0; i < dataChart.Length; i++)
             {
-                dataChart[i] = new DataChart();
+                dataChart[i] = new DataChartModel();
                 dataChart[i].Label = $"{date.AddDays(i)}";
                 dataChart[i].Value = drob ?  ((double)(random.Next(minValue, maxValue))/100) : random.Next(minValue, maxValue);
             }
