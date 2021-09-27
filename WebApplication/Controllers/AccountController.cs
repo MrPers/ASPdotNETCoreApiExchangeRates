@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.DTO;
 using WebApplication.Models;
 using WebApplication.Services;
 
@@ -11,10 +13,12 @@ namespace WebApplication.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost("authenticate")]
@@ -29,24 +33,30 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost("regist")]
-        public async Task<IActionResult> Register(UserModel userModel)
+        public async Task<IActionResult> Register(UserViewModel userModel, bool authorize = false)//todo:View model->dto
         {
-            var response = await _userService.Register(userModel);
-
-            if (response == null)
+            if (!ModelState.IsValid) 
+            {
+                
+            }
+            //var user = _mapper.Map<User>(userModel);VM->DTO
+            var dto = _mapper.Map<UserModelDto>(userModel); //VM->DTO
+            var createdUser = await _userService.Register(dto);//DTO
+            if (createdUser == null)
             {
                 return BadRequest(new { message = "Didn't register!" });
             }
+            if (authorize)
+            {
+                string token = await _userService.Authenticate(createdUser.Name, createdUser.Password);
 
-            return Ok(response);
-        }
-
-        [Authorize]//
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            var users = _userService.GetAll();
-            return Ok(users);
+                if (string.IsNullOrWhiteSpace(token))
+                {
+                    return BadRequest("somethin went wrong");
+                }
+                return Ok(token);
+            }
+            return Ok();
         }
     }
 }

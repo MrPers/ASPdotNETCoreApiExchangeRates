@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Entities
 {
-    public class DataChartModel
+    public class DataChart
     {
         public double Value { get; set; }
         public string Label { get; set; }

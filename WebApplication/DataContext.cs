@@ -5,15 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using WebApplication.Entities;
 
-namespace WebApplication.Identity
+namespace WebApplication
 {
     public class DataContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<CurrencyHistory> CurrencyHistories { get; set; }
+        public DbSet<Currency> Currencies { get; set; }
         public DataContext(DbContextOptions<DataContext> options)
             : base(options)
         {
-            Database.EnsureCreated();   // создаем базу данных при первом обращении
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
 
         public async Task<int> SaveChangesAsync()

@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApplication.DTO;
+using WebApplication.Entities;
 using WebApplication.Models;
 
 namespace WebApplication.Services
 {
     public interface IUserService
     {
-        AuthenticateResponse Authenticate(AuthenticateRequest model);
-        Task<AuthenticateResponse> Register(UserModel userModel);
-        IEnumerable<UserModel> GetAll();
-        UserModel GetById(int id);
+        Task<string> Authenticate(string login, string password);
+        Task<UserModelDto> Register(UserModelDto userModel);
+        IEnumerable<User> GetAll();
+        User GetById(int id);
     }
 }
