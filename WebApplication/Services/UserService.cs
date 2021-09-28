@@ -7,38 +7,39 @@ using WebApplication.DTO;
 using WebApplication.Entities;
 using WebApplication.Helpers;
 using WebApplication.Models;
+using WebApplication.Repository;
 
 namespace WebApplication.Services
 {
     public class UserService : IUserService
     {
-        private readonly IEfRepository<User> _userRepository;
+        private readonly IUserRepository<User> _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public UserService(IEfRepository<User> userRepository, IConfiguration configuration, IMapper mapper)
+        public UserService(IUserRepository<User> userRepository, IConfiguration configuration, IMapper mapper)
         {
             _userRepository = userRepository;
             _configuration = configuration;
             _mapper = mapper;
         }
 
-        public string Authenticate(string login, string password)
-        {
-            var user = _userRepository
-                .GetAll()
-                .FirstOrDefault(x => x.Name == login && x.Password == password);
+        //public string Authenticate(string login, string password)
+        //{
+        //    var user = _userRepository
+        //        .GetAll()
+        //        .FirstOrDefault(x => x.Name == login && x.Password == password);
 
-            if (user == null)
-            {
-                // todo: need to add logger
-                return null;
-            }
+        //    if (user == null)
+        //    {
+        //        // todo: need to add logger
+        //        return null;
+        //    }
 
-            var token = _configuration.GenerateJwtToken(user);
+        //    var token = _configuration.GenerateJwtToken(user);
 
-            return token;
-        }
+        //    return token ;
+        //}
 
         public async Task<UserModelDto> Register(UserModelDto userModel)
         {
@@ -65,5 +66,10 @@ namespace WebApplication.Services
         {
             return _userRepository.GetById(id);
         }
+
+        //AuthenticateResponse IUserService.Authenticate(string login, string password)
+        //{
+        //    throw new System.NotImplementedException();
+        //}
     }
 }

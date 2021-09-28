@@ -6,21 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using WebApplication.Models;
 using WebApplication.Services;
 using WebApplication.Mappings;
+using WebApplication.Repository;
 
 namespace WebApplication
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,9 +24,12 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddScoped(typeof(IEfRepository<>), typeof(UserRepository<>));
+            services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
+            services.AddScoped(typeof(ICurrencyRepository<>), typeof(CurrencyRepository<>));
 
             services.AddAutoMapper(typeof(UserProfile));
+            services.AddAutoMapper(typeof(CurrencyProfile));
+
             services.AddControllers();
             services.AddCors();
 
@@ -48,6 +44,7 @@ namespace WebApplication
             services.AddControllersWithViews();
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

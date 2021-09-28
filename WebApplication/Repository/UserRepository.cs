@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Entities;
 
-namespace WebApplication.Services
+namespace WebApplication.Repository
 {
-    public class UserRepository<T> : IEfRepository<T> where T : BaseEntity
+    public class UserRepository<T> : IUserRepository<T> where T : BaseEntity
     {
         private readonly DataContext _context;
 

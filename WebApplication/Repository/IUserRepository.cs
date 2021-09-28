@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.Entities;
 
-namespace WebApplication.Services
+namespace WebApplication.Repository
 {
-    public interface IEfRepository<T> where T : BaseEntity
+    public interface IUserRepository<T> where T : BaseEntity
     {
         List<T> GetAll();
         T GetById(long id);

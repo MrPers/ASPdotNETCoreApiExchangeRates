@@ -1,28 +1,43 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication.DTO;
 using WebApplication.Entities;
+using WebApplication.Repository;
 
 namespace WebApplication.Services
 {
-    public class CurrencyService
-        //<T> where T : BaseEntity
+    public class CurrencyService : ICurrencyService
     {
+        private readonly ICurrencyRepository<Currency> _currencyRepository;
+        private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        private readonly DataContext _context;
 
-        public CurrencyService(DataContext context, IMapper mapper)
+        public CurrencyService(ICurrencyRepository<Currency> currencyService, IConfiguration configuration, IMapper mapper)
         {
+            _currencyRepository = currencyService;
+            _configuration = configuration;
             _mapper = mapper;
-            _context = context;
         }
 
-        public DataChart[] GetWell(string value)
+        IEnumerable<Currency> ICurrencyService.GetWellAsync(string title)
         {
-            
+
+            var currency = _currencyRepository.GetIdCurrency(title);
+
+            var currencyHistoy = _currencyRepository.GetAll(currency);
+
+            //var newUser = new UserModelDto
+            //{
+            //    Id = newUserId,
+            //    Name = user.Name,
+            //    Password = user.Password
+            //};
+
             return null;
         }
     }

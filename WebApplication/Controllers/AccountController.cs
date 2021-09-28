@@ -20,41 +20,41 @@ namespace WebApplication.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+        //[HttpPost("authenticate")]
+        //public IActionResult Authenticate(AuthenticateRequest model)
+        //{
+        //    var response = _userService.Authenticate(model);
 
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate(AuthenticateRequest model)
-        {
-            var response = _userService.Authenticate(model);
+        //    if (response == null)
+        //        return BadRequest(new { message = "Username or password is incorrect" });
 
-            if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
         [HttpPost("regist")]
-        public async Task<IActionResult> Register(UserViewModel userModel, bool authorize = false)//todo:View model->dto
+        public async Task<IActionResult> Register(UserViewModel userModel)//todo:View model->dto
         {
             if (!ModelState.IsValid) 
             {
-                
+                return BadRequest(new { message = "Didn't register!" });
             }
-            //var user = _mapper.Map<User>(userModel);VM->DTO
+
             var dto = _mapper.Map<UserModelDto>(userModel); //VM->DTO
             var createdUser = await _userService.Register(dto);//DTO
+
             if (createdUser == null)
             {
                 return BadRequest(new { message = "Didn't register!" });
             }
-            if (authorize)
+            if (userModel.Authorize)
             {
-                string token = await _userService.Authenticate(createdUser.Name, createdUser.Password);
+                //string token = await _userService.Authenticate(createdUser.Name, createdUser.Password);
 
-                if (string.IsNullOrWhiteSpace(token))
-                {
-                    return BadRequest("somethin went wrong");
-                }
-                return Ok(token);
+                //if (string.IsNullOrWhiteSpace(token))
+                //{
+                //    return BadRequest("somethin went wrong");
+                //}
+                //return Ok(token);
             }
             return Ok();
         }

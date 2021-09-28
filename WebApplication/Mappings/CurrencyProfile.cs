@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using WebApplication.DTO;
 using WebApplication.Entities;
 using WebApplication.Models;
+//using WebApplication.Models;
 
 namespace WebApplication.Mappings
 {
@@ -8,11 +10,8 @@ namespace WebApplication.Mappings
     {
         public CurrencyProfile()
         {
-            CreateMap<CurrencyHistoryModel, CurrencyHistory>()
-                .ForMember(dst => dst.Buy, opt => opt.MapFrom(src => src.Buy))
-                .ForMember(dst => dst.Sale, opt => opt.MapFrom(src => src.Sale))
-                .ForMember(dst => dst.Data, opt => opt.MapFrom(src => src.Data))
-                .ForMember(dst => dst.Id, opt => opt.Ignore());
+            CreateMap<CurrencyModelDto, CurrencyModelDto>().ReverseMap();
+            CreateMap<Currency, CurrencyModelDto>().ReverseMap();
         }
     }
 }
