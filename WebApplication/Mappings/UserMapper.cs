@@ -5,9 +5,9 @@ using WebApplication.Models;
 
 namespace WebApplication.Mappings
 {
-    public class UserProfile : Profile
+    public class UserMapper : Profile
     {
-        public UserProfile()
+        public UserMapper()
         {
             //CreateMap<UserViewModel, UserModelDto>().ReverseMap();
             //CreateMap<User, UserModelDto>().ReverseMap();

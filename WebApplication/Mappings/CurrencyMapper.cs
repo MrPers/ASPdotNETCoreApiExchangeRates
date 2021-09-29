@@ -6,9 +6,9 @@ using WebApplication.Models;
 
 namespace WebApplication.Mappings
 {
-    public class CurrencyProfile : Profile
+    public class CurrencyMapper : Profile
     {
-        public CurrencyProfile()
+        public CurrencyMapper()
         {
             CreateMap<CurrencyHistoryVM, CurrencyHistory>()
                 //.ForMember(dst => dst.CurrencyId, opt => opt.Ignore())

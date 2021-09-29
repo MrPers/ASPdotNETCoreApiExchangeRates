@@ -27,8 +27,8 @@ namespace WebApplication
             services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
             services.AddScoped(typeof(ICurrencyRepository<>), typeof(CurrencyRepository<>));
 
-            services.AddAutoMapper(typeof(UserProfile));
-            services.AddAutoMapper(typeof(CurrencyProfile));
+            services.AddAutoMapper(typeof(UserMapper));
+            services.AddAutoMapper(typeof(CurrencyMapper));
 
             services.AddControllers();
             services.AddCors();

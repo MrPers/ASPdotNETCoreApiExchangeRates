@@ -20,6 +20,7 @@ namespace WebApplication.Controllers
             _userService = userService;
             _mapper = mapper;
         }
+
         //[HttpPost("authenticate")]
         //public IActionResult Authenticate(AuthenticateRequest model)
         //{
