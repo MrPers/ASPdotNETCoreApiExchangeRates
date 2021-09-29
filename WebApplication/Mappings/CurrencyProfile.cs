@@ -10,8 +10,13 @@ namespace WebApplication.Mappings
     {
         public CurrencyProfile()
         {
-            CreateMap<CurrencyModelDto, CurrencyModelDto>().ReverseMap();
-            CreateMap<Currency, CurrencyModelDto>().ReverseMap();
+            CreateMap<CurrencyHistoryVM, CurrencyHistory>()
+                //.ForMember(dst => dst.CurrencyId, opt => opt.Ignore())
+                //.ForPath(dst => dst.Currency, opt => opt.Ignore())
+                .ReverseMap();
+
+            //CreateMap<Currency, CurrencyModelDto>()
+            //    .ReverseMap();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.DTO;
 using WebApplication.Entities;
+using WebApplication.Models;
 
 namespace WebApplication.Repository
 {
@@ -19,21 +20,25 @@ namespace WebApplication.Repository
             _mapper = mapper;
         }
 
-        public List<T> GetAll(CurrencyModelDto currencyH)
+        public List<CurrencyHistoryVM> GetAll(long Id)
         {
-            foreach (CurrencyHistory item in _context.CurrencyHistories.Last())
-                if (item.Name == currencyH.Id)
-                    return _mapper.Map<CurrencyModelDto>(item);
-            return null;
-            //return _context.Set<T>().ToList();
+            List<CurrencyHistoryVM> currencyHistory = new List<CurrencyHistoryVM>();
+
+            var currencies = _context.CurrencyHistories.ToList();
+
+            foreach (CurrencyHistory item in currencies)
+                if (item.CurrencyId == Id)
+                    currencyHistory.Add(_mapper.Map<CurrencyHistory, CurrencyHistoryVM>(item));
+            
+            return currencyHistory;
         }
 
-        public CurrencyModelDto GetIdCurrency(string title)
+        public long GetIdCurrency(string title)
         {
             foreach (Currency item in _context.Currencies.ToList())
                 if(item.Name == title)
-                    return _mapper.Map<CurrencyModelDto>(item);
-            return null;
+                    return item.Id;
+            return 0;
         }
     }
 }

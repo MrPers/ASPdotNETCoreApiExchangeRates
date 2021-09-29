@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class AuthenticateRequest
+    public class CurrencyHistoryVM
     {
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public string Password { get; set; }
+        public double Buy { get; set; }
+        public double Sale { get; set; }
+        public DateTime Data { get; set; }
     }
 }

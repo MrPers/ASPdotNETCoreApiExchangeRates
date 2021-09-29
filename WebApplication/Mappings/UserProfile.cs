@@ -12,7 +12,7 @@ namespace WebApplication.Mappings
             //CreateMap<UserViewModel, UserModelDto>().ReverseMap();
             //CreateMap<User, UserModelDto>().ReverseMap();
 
-            CreateMap<UserViewModel, UserModelDto>().ReverseMap();
+            CreateMap<UserViewVM, UserModelDto>().ReverseMap();
             CreateMap<User, UserModelDto>().ReverseMap()
             //.ForMember(dest => dest.Authorize, opt => opt.Ignore())
             ;

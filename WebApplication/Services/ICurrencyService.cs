@@ -8,6 +8,6 @@ namespace WebApplication.Services
 {
     public interface ICurrencyService
     {
-        IEnumerable<Currency> GetWellAsync(string title);
+        IEnumerable<CurrencyHistoryVM> GetWellAsync(string title);
     }
 }

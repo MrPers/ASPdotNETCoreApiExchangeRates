@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class CurrencyModel
+    public class CurrencyVM
     {
         public long Id { get; set; }
         public string Name { get; set; }

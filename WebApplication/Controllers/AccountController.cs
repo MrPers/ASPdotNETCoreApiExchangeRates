@@ -32,7 +32,7 @@ namespace WebApplication.Controllers
         //}
 
         [HttpPost("regist")]
-        public async Task<IActionResult> Register(UserViewModel userModel)//todo:View model->dto
+        public async Task<IActionResult> Register(UserViewVM userModel)//todo:View model->dto
         {
             if (!ModelState.IsValid) 
             {

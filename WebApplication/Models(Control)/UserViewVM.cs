@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication.Models
 {
-    public class UserViewModel
+    public class UserViewVM
     {
         public string Name { get; set; }
         public string Phone { get; set; }

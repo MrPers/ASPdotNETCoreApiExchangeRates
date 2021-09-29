@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using WebApplication.DTO;
 using WebApplication.Entities;
-using WebApplication.Helpers;
 using WebApplication.Models;
 using WebApplication.Repository;
 
@@ -66,10 +65,5 @@ namespace WebApplication.Services
         {
             return _userRepository.GetById(id);
         }
-
-        //AuthenticateResponse IUserService.Authenticate(string login, string password)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
     }
 }

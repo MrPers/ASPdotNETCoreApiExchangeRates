@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using WebApplication.Entities;
-using WebApplication.Models;
 using WebApplication.Services;
 
 namespace WebAppi.Controllers
@@ -28,7 +23,6 @@ namespace WebAppi.Controllers
         {
             var report = _currencyService.GetWellAsync(title);
             return report == null ? NotFound() : Ok(new object[] { title, report });
-            //return Ok();
         }
 
     }

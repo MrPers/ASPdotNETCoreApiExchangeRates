@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.DTO;
 using WebApplication.Entities;
+using WebApplication.Models;
 using WebApplication.Repository;
 
 namespace WebApplication.Services
@@ -24,51 +25,14 @@ namespace WebApplication.Services
             _mapper = mapper;
         }
 
-        IEnumerable<Currency> ICurrencyService.GetWellAsync(string title)
+        IEnumerable<CurrencyHistoryVM> ICurrencyService.GetWellAsync(string title)
         {
 
             var currency = _currencyRepository.GetIdCurrency(title);
 
             var currencyHistoy = _currencyRepository.GetAll(currency);
 
-            //var newUser = new UserModelDto
-            //{
-            //    Id = newUserId,
-            //    Name = user.Name,
-            //    Password = user.Password
-            //};
-
-            return null;
+            return currencyHistoy;
         }
     }
 }
-//Random random = new Random();
-//Money money = new Money();
-
-//switch (value)
-//{
-//    case "USD":
-//        maxValue = 30;
-//        minValue = 25;
-//        break;
-//    case "EUR":
-//        maxValue = 36;
-//        minValue = 29;
-//        break;
-//    case "RUB":
-//        maxValue = 50;
-//        minValue = 5;
-//        drob = true;
-//        break;
-//    default:
-//        return null;
-//}
-//DataChart[] dataChart = new DataChart[random.Next(30, 200)];
-//DateTime date = DateTime.UtcNow.AddDays(-(dataChart.Length));
-//for (int i = 0; i < dataChart.Length; i++)
-//{
-//    dataChart[i] = new DataChart();
-//    dataChart[i].Label = $"{date.AddDays(i)}";
-//    dataChart[i].Value = drob ? ((double)(random.Next(minValue, maxValue)) / 100) : random.Next(minValue, maxValue);
-//}
-//return dataChart;
