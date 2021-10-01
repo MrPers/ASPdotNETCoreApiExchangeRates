@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using WebApplication.DTO;
-using WebApplication.Entities;
+using System;
+using WebApplication.Entites;
 using WebApplication.Models;
-//using WebApplication.Models;
 
 namespace WebApplication.Mappings
 {

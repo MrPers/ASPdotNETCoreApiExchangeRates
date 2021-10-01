@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WebApplication.Migrations
+namespace WebApplication.DB.Migrations
 {
     public partial class MigrateDB : Migration
     {

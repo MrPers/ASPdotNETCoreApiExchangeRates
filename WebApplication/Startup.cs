@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using WebApplication.Services;
 using WebApplication.Mappings;
 using WebApplication.Repository;
+using WebApplication.DB;
 
 namespace WebApplication
 {

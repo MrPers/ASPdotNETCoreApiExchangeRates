@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApplication;
+using WebApplication.DB;
 
-namespace WebApplication.Migrations
+namespace WebApplication.DB.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -19,7 +19,7 @@ namespace WebApplication.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebApplication.Entities.Currency", b =>
+            modelBuilder.Entity("WebApplication.Entites.Currency", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,7 +34,7 @@ namespace WebApplication.Migrations
                     b.ToTable("Currencies");
                 });
 
-            modelBuilder.Entity("WebApplication.Entities.CurrencyHistory", b =>
+            modelBuilder.Entity("WebApplication.Entites.CurrencyHistory", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,7 +60,7 @@ namespace WebApplication.Migrations
                     b.ToTable("CurrencyHistories");
                 });
 
-            modelBuilder.Entity("WebApplication.Entities.User", b =>
+            modelBuilder.Entity("WebApplication.Entites.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,9 +84,9 @@ namespace WebApplication.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("WebApplication.Entities.CurrencyHistory", b =>
+            modelBuilder.Entity("WebApplication.Entites.CurrencyHistory", b =>
                 {
-                    b.HasOne("WebApplication.Entities.Currency", "Currency")
+                    b.HasOne("WebApplication.Entites.Currency", "Currency")
                         .WithMany("CurrencyHistory")
                         .HasForeignKey("CurrencyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -95,7 +95,7 @@ namespace WebApplication.Migrations
                     b.Navigation("Currency");
                 });
 
-            modelBuilder.Entity("WebApplication.Entities.Currency", b =>
+            modelBuilder.Entity("WebApplication.Entites.Currency", b =>
                 {
                     b.Navigation("CurrencyHistory");
                 });

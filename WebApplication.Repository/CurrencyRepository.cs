@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using WebApplication.DTO;
-using WebApplication.Entities;
+using WebApplication.DB;
+using WebApplication.Entites;
 using WebApplication.Models;
 
 namespace WebApplication.Repository
@@ -29,14 +30,14 @@ namespace WebApplication.Repository
             foreach (CurrencyHistory item in currencies)
                 if (item.CurrencyId == Id)
                     currencyHistory.Add(_mapper.Map<CurrencyHistory, CurrencyHistoryVM>(item));
-            
+
             return currencyHistory;
         }
 
         public long GetIdCurrency(string title)
         {
             foreach (Currency item in _context.Currencies.ToList())
-                if(item.Name == title)
+                if (item.Name == title)
                     return item.Id;
             return 0;
         }

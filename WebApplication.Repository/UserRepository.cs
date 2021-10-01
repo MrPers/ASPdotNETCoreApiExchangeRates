@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication.Entities;
+using WebApplication.DB;
+using WebApplication.Entites;
 
 namespace WebApplication.Repository
 {

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApplication.Entities
+namespace WebApplication.Entites
 {
     public class CurrencyHistory : BaseEntity
     {
@@ -12,6 +12,6 @@ namespace WebApplication.Entities
         public double Sale { get; set; }
         public DateTime Data { get; set; }
         public long CurrencyId { get; set; }
-        public Currency Currency{ get; set; }
+        public Currency Currency { get; set; }
     }
 }

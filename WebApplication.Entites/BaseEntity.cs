@@ -1,4 +1,6 @@
-﻿namespace WebApplication.Entities
+﻿using System;
+
+namespace WebApplication.Entites
 {
     public class BaseEntity
     {

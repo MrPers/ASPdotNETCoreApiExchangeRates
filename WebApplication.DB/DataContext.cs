@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using WebApplication.Entities;
+using WebApplication.Entites;
 
-namespace WebApplication
+namespace WebApplication.DB
 {
     public class DataContext : DbContext
     {
@@ -19,9 +17,9 @@ namespace WebApplication
             //Database.EnsureCreated();
         }
 
-        public async Task<int> SaveChangesAsync()
-        {
-            return await base.SaveChangesAsync();
-        }
+        //public async Task<int> SaveChangesAsync()
+        //{
+        //    return await base.SaveChangesAsync();
+        //}
     }
 }
