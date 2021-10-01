@@ -5,13 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\WebApplication.DTO\WebApplication.DTO.csproj" />
     <ProjectReference Include="..\WebApplication.Entites\WebApplication.Entites.csproj" />
-    <ProjectReference Include="..\WebApplication.Models\WebApplication.Models.csproj" />
   </ItemGroup>
 
 </Project>

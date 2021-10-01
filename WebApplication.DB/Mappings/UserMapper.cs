@@ -6,16 +6,16 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApplication.DTO;
 using WebApplication.Entites;
-using WebApplication.Models;
+//using WebApplication.Models;
 
-namespace WebApplication.Mappings
+namespace WebApplication.DB.Mappings
 {
     public class UserMapper : Profile
     {
         public UserMapper()
         {
-            CreateMap<UserViewVM, UserModelDto>().ReverseMap();
-            CreateMap<User, UserModelDto>().ReverseMap();
+            //CreateMap<UserViewVM, UserModelDto>().ReverseMap();
+            //CreateMap<User, UserModelDto>().ReverseMap();
         }
     }
 }

@@ -10,7 +10,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WebApplication.DB\WebApplication.DB.csproj" />
-    <ProjectReference Include="..\WebApplication.Models\WebApplication.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="WebApplication.Models">
+      <HintPath>..\WebApplication.Models\bin\Debug\net5.0\ref\WebApplication.Models.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

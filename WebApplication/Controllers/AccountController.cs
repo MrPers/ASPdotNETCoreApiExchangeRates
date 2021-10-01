@@ -57,7 +57,7 @@ namespace WebApplication.Controllers
                 //}
                 //return Ok(token);
             }
-            return Ok();
+            return Ok(createdUser);
         }
     }
 }

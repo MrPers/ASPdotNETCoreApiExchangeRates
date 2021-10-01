@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebApplication.DB\WebApplication.DB.csproj" />
     <ProjectReference Include="..\WebApplication.DTO\WebApplication.DTO.csproj" />
-    <ProjectReference Include="..\WebApplication.Mappings\WebApplication.Mappings.csproj" />
+    <ProjectReference Include="..\WebApplication.Entites\WebApplication.Entites.csproj" />
     <ProjectReference Include="..\WebApplication.Repository\WebApplication.Repository.csproj" />
     <ProjectReference Include="..\WebApplication.Services\WebApplication.Services.csproj" />
   </ItemGroup>

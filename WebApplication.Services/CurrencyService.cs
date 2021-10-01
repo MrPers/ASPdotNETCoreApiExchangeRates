@@ -19,7 +19,7 @@ namespace WebApplication.Services
             _mapper = mapper;
         }
 
-        IEnumerable<CurrencyHistoryVM> ICurrencyService.GetWellAsync(string title)
+        IEnumerable<CurrencyHistory> ICurrencyService.GetWellAsync(string title)
         {
 
             var currency = _currencyRepository.GetIdCurrency(title);

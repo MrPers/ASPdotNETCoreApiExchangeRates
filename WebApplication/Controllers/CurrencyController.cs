@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using WebApplication.DTO;
+using WebApplication.Entites;
+using WebApplication.Models;
 using WebApplication.Services;
 
-namespace WebAppi.Controllers
+namespace WebApplication.Controllers
 {
     [Route("api/")]
     [ApiController]
@@ -22,7 +26,13 @@ namespace WebAppi.Controllers
         public IActionResult SetFavorite(string title)
         {
             var report = _currencyService.GetWellAsync(title);
-            return report == null ? NotFound() : Ok(new object[] { title, report });
+
+            List<CurrencyHistoryVM> currencyHistory = new List<CurrencyHistoryVM>();
+            foreach (var item in report)
+                currencyHistory.Add(_mapper.Map<CurrencyHistory, CurrencyHistoryVM>(item));
+
+            IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
+            return result;
         }
 
     }

@@ -16,6 +16,7 @@ namespace WebApplication.Mappings
         {
             CreateMap<UserViewVM, UserModelDto>().ReverseMap();
             CreateMap<User, UserModelDto>().ReverseMap();
+            CreateMap<CurrencyHistoryVM, CurrencyHistory>().ReverseMap();
         }
     }
 }
