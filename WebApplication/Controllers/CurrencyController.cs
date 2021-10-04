@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
+using WebApplication.DB.Entites;
 using WebApplication.DTO;
-using WebApplication.Entites;
 using WebApplication.Models;
 using WebApplication.Services;
 
@@ -27,9 +28,7 @@ namespace WebApplication.Controllers
         {
             var report = _currencyService.GetWellAsync(title);
 
-            List<CurrencyHistoryVM> currencyHistory = new List<CurrencyHistoryVM>();
-            foreach (var item in report)
-                currencyHistory.Add(_mapper.Map<CurrencyHistory, CurrencyHistoryVM>(item));
+            IEnumerable<CurrencyHistoryVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyHistoryVM>>(report);
 
             IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
             return result;

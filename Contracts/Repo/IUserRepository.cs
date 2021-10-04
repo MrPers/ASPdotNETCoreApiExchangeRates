@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Contracts.Repo.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using WebApplication.Entites;
 
 namespace WebApplication.Repository
 {
-    public interface IUserRepository<T> where T : BaseEntity
+    public interface IUserRepository<T> where T : IBaseEntity
     {
         List<T> GetAll();
         T GetById(long id);

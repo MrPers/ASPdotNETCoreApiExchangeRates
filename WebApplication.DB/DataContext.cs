@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using WebApplication.Entites;
+using WebApplication.DB.Entites;
 
 namespace WebApplication.DB
 {

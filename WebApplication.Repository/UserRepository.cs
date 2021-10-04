@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.DB;
-using WebApplication.Entites;
-
 namespace WebApplication.Repository
 {
     public class UserRepository<T> : IUserRepository<T> where T : BaseEntity

@@ -5,42 +5,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApplication.DB;
-using WebApplication.Entites;
+using WebApplication.DB.Entites;
+using WebApplication.DTO;
 using WebApplication.Models;
 //using WebApplication.Models;
 
 namespace WebApplication.Repository
 {
-    public class CurrencyRepository<T> : ICurrencyRepository<T> where T : BaseEntity
+    public class CurrencyRepository : BaseRepository<Currency, CurrencyDto, long>, ICurrencyRepository
     {
-        private readonly DataContext _context;
-        private readonly IMapper _mapper;
-
-        public CurrencyRepository(DataContext context, IMapper mapper)
+        public CurrencyRepository(DataContext context, IMapper mapper) : base(context, mapper)
         {
-            _context = context;
-            _mapper = mapper;
         }
 
-        public List<CurrencyHistory> GetAll(long Id)
+        public long GetCurrencyIdByName(string name)
         {
-            List<CurrencyHistory> currencyHistory = new List<CurrencyHistory>();
-
-            var currencies = _context.CurrencyHistories.ToList();
-
-            foreach (CurrencyHistory item in currencies)
-                if (item.CurrencyId == Id)
-                    currencyHistory.Add(item);
-
-            return currencyHistory;
+            return this._context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
         }
 
-        public long GetIdCurrency(string title)
+        public ICollection<CurrencyHistoryDto> GetHistory(long currencyId)
         {
-            foreach (Currency item in _context.Currencies.ToList())
-                if (item.Name == title)
-                    return item.Id;
-            return 0;
+            var dbItems = this._context.CurrencyHistories.Where(el => el.CurrencyId == currencyId);
+            return _mapper.Map<ICollection<CurrencyHistoryDto>>(dbItems);
         }
     }
 }

@@ -2,7 +2,7 @@
 //using AutoMapper.Configuration;
 using System;
 using System.Collections.Generic;
-using WebApplication.Entites;
+using WebApplication.DTO;
 using WebApplication.Models;
 using WebApplication.Repository;
 
@@ -10,23 +10,22 @@ namespace WebApplication.Services
 {
     public class CurrencyService : ICurrencyService
     {
-        private readonly ICurrencyRepository<Currency> _currencyRepository;
+        private readonly ICurrencyRepository _currencyRepository;
         private readonly IMapper _mapper;
 
-        public CurrencyService(ICurrencyRepository<Currency> currencyService, IMapper mapper)
+        public CurrencyService(ICurrencyRepository currencyService, IMapper mapper)
         {
             _currencyRepository = currencyService;
             _mapper = mapper;
         }
 
-        IEnumerable<CurrencyHistory> ICurrencyService.GetWellAsync(string title)
+        public IEnumerable<CurrencyHistoryDto> GetWellAsync(string title)
         {
 
-            var currency = _currencyRepository.GetIdCurrency(title);
+            var currencyId = _currencyRepository.GetCurrencyIdByName(title);
+            var currencyHistory = _currencyRepository.GetHistory(currencyId);
 
-            var currencyHistoy = _currencyRepository.GetAll(currency);
-
-            return currencyHistoy;
+            return currencyHistory;
         }
     }
 }

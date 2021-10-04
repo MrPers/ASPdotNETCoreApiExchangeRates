@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApplication.DB.Entites;
 using WebApplication.DTO;
-using WebApplication.Entites;
 using WebApplication.Repository;
 
 namespace WebApplication.Services
@@ -39,13 +39,13 @@ namespace WebApplication.Services
         //    return token ;
         //}
 
-        public async Task<UserModelDto> Register(UserModelDto userModel)
+        public async Task<UserDto> Register(UserDto userModel)
         {
             var user = _mapper.Map<User>(userModel);
 
             var newUserId = await _userRepository.Add(user);
 
-            var newUser = new UserModelDto
+            var newUser = new UserDto
             {
                 Id = newUserId,
                 Name = user.Name,

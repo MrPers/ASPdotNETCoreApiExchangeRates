@@ -26,7 +26,7 @@ namespace WebApplication
         {
 
             services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
-            services.AddScoped(typeof(ICurrencyRepository<>), typeof(CurrencyRepository<>));
+            services.AddScoped(typeof(ICurrencyRepository), typeof(CurrencyRepository));
 
             services.AddAutoMapper(typeof(UserMapper));
 

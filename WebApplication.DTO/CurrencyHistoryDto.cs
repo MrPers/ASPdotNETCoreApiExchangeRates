@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace WebApplication.DTO
 {
-    public class CurrencyHistoyModelDto
+    public class CurrencyHistoryDto:IBaseEntity<long>
     {
         public long Id { get; set; }
         public double Buy { get; set; }
         public double Sale { get; set; }
         public DateTime Data { get; set; }
         public long CurrencyId { get; set; }
-        public CurrencyModelDto CurrencyModelDto { get; set; }
+        public CurrencyDto CurrencyDto { get; set; }
     }
 }

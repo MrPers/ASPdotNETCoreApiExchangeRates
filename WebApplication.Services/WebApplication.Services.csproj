@@ -9,9 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApplication.DB\WebApplication.DB.csproj" />
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
     <ProjectReference Include="..\WebApplication.DTO\WebApplication.DTO.csproj" />
-    <ProjectReference Include="..\WebApplication.Repository\WebApplication.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

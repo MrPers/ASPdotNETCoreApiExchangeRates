@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApplication.DTO
 {
-    public class CurrencyModelDto
+    public interface IBaseEntity<T>
     {
-        public long Id { get; set; }
-        public string Name { get; set; }
+        public T Id { get; set; }
     }
 }

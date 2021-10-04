@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebApplication.DB.Entites;
 using WebApplication.DTO;
-using WebApplication.Entites;
 using WebApplication.Models;
 
 namespace WebApplication.Mappings
@@ -14,9 +14,9 @@ namespace WebApplication.Mappings
     {
         public UserMapper()
         {
-            CreateMap<UserViewVM, UserModelDto>().ReverseMap();
-            CreateMap<User, UserModelDto>().ReverseMap();
-            CreateMap<CurrencyHistoryVM, CurrencyHistory>().ReverseMap();
+            CreateMap<UserViewVM, UserDto>().ReverseMap();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<CurrencyHistoryVM, DB.Entites.CurrencyHistoryDto>().ReverseMap();
         }
     }
 }

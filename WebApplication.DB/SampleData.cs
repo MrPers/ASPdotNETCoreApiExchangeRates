@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApplication.Entites;
+using WebApplication.DB.Entites;
 //using System.Threading.Tasks;
 //using WebApplication.Entities;
 
@@ -26,7 +26,7 @@ namespace WebApplication.DB
                 context.Currencies.AddRange(currencies);
                 context.SaveChanges();
 
-                List<CurrencyHistory> currencyHistoriesTime = new List<CurrencyHistory>();
+                List<CurrencyHistoryDto> currencyHistoriesTime = new List<CurrencyHistoryDto>();
                 DateTime date = DateTime.UtcNow.AddDays(-(currencyHistoriesTime.Count));
 
                 foreach (var currency in currencies)
@@ -35,7 +35,7 @@ namespace WebApplication.DB
                     {
                         stepCostcurrencyHistories = random.Next((int)(20 * currency.Id), (int)(30 * currency.Id));
                         currencyHistoriesTime.Add(
-                            new CurrencyHistory
+                            new CurrencyHistoryDto
                             {
                                 Sale = stepCostcurrencyHistories,
                                 Buy = (random.Next(2, 10) + stepCostcurrencyHistories),

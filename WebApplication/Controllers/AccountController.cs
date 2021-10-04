@@ -40,7 +40,7 @@ namespace WebApplication.Controllers
                 return BadRequest(new { message = "Didn't register!" });
             }
 
-            var dto = _mapper.Map<UserModelDto>(userModel); //VM->DTO
+            var dto = _mapper.Map<UserDto>(userModel); //VM->DTO
             var createdUser = await _userService.Register(dto);//DTO
 
             if (createdUser == null)
