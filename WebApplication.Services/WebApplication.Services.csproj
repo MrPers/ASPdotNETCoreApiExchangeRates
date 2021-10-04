@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contracts\Contracts.csproj" />
+    <ProjectReference Include="..\WebApplication.DB\WebApplication.DB.csproj" />
     <ProjectReference Include="..\WebApplication.DTO\WebApplication.DTO.csproj" />
   </ItemGroup>
 

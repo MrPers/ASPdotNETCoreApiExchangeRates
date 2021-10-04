@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace WebApplication.DB.Entites
 {
-    public class User : BaseEntity
+    public class User : BaseEntity<long>
     {
         public string Name { get; set; }
-        //[EmailAddress]
         public string Email { get; set; }
-        //[Phone]
         public string Phone { get; set; }
         public string Password { get; set; }
     }

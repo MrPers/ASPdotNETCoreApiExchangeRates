@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication.DTO;
 
 namespace WebApplication.Services
 {
     public interface ICurrencyService
     {
-        IEnumerable<CurrencyHistoryDto> GetWellAsync(string title);
+        Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title);
     }
 }

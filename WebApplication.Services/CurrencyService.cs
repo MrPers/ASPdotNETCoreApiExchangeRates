@@ -2,6 +2,7 @@
 //using AutoMapper.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication.DTO;
 using WebApplication.Models;
 using WebApplication.Repository;
@@ -19,11 +20,11 @@ namespace WebApplication.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<CurrencyHistoryDto> GetWellAsync(string title)
+        public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title)
         {
 
-            var currencyId = _currencyRepository.GetCurrencyIdByName(title);
-            var currencyHistory = _currencyRepository.GetHistory(currencyId);
+            var currencyId = await _currencyRepository.GetCurrencyIdByName(title);
+            var currencyHistory = await _currencyRepository.GetHistory(currencyId);
 
             return currencyHistory;
         }

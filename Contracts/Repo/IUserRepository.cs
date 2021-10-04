@@ -1,13 +1,11 @@
-﻿using Contracts.Repo.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using WebApplication.DTO;
 
 namespace WebApplication.Repository
 {
-    public interface IUserRepository<T> where T : IBaseEntity
+    public interface IUserRepository : IBaseRepository<UserDto, UserDto, long>
     {
-        List<T> GetAll();
-        T GetById(long id);
-        Task<long> Add(T entity);
+        Task<long> Add(UserDto userDto);
     }
 }

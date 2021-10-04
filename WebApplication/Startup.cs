@@ -25,7 +25,7 @@ namespace WebApplication
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
+            services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(ICurrencyRepository), typeof(CurrencyRepository));
 
             services.AddAutoMapper(typeof(UserMapper));

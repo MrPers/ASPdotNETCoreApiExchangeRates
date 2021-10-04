@@ -2,7 +2,7 @@
 
 namespace WebApplication.DTO
 {
-    public class UserDto
+    public class UserDto : IBaseEntity<long>
     {
         public long Id { get; set; }
         public string Name { get; set; }

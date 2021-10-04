@@ -8,7 +8,7 @@ using WebApplication.Services;
 
 namespace WebApplication.Controllers
 {
-    [Route("api/")]//  /api/Account/login
+    [Route("api/")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -20,44 +20,19 @@ namespace WebApplication.Controllers
             _userService = userService;
             _mapper = mapper;
         }
-
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate(AuthenticateRequest model)
-        //{
-        //    var response = _userService.Authenticate(model);
-
-        //    if (response == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-
-        //    return Ok(response);
-        //}
-
+        
         [HttpPost("regist")]
-        public async Task<IActionResult> Register(UserViewVM userModel)//todo:View model->dto
+        public async Task<IActionResult> Register(UserViewVM userModel)
         {
             if (!ModelState.IsValid) 
             {
                 return BadRequest(new { message = "Didn't register!" });
             }
 
-            var dto = _mapper.Map<UserDto>(userModel); //VM->DTO
-            var createdUser = await _userService.Register(dto);//DTO
+            var dto = _mapper.Map<UserDto>(userModel);
+            var createdUserId = await _userService.RegisterAsync(dto);
 
-            if (createdUser == null)
-            {
-                return BadRequest(new { message = "Didn't register!" });
-            }
-            if (userModel.Authorize)
-            {
-                //string token = await _userService.Authenticate(createdUser.Name, createdUser.Password);
-
-                //if (string.IsNullOrWhiteSpace(token))
-                //{
-                //    return BadRequest("somethin went wrong");
-                //}
-                //return Ok(token);
-            }
-            return Ok(createdUser);
+            return Ok(createdUserId);
         }
     }
 }

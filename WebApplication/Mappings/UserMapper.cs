@@ -16,7 +16,8 @@ namespace WebApplication.Mappings
         {
             CreateMap<UserViewVM, UserDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<CurrencyHistoryVM, DB.Entites.CurrencyHistoryDto>().ReverseMap();
+            CreateMap<CurrencyHistoryVM, CurrencyHistoryDto>().ReverseMap();
+            CreateMap<CurrencyHistory, CurrencyHistoryDto>().ReverseMap();
         }
     }
 }

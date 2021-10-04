@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication.DB.Entites;
 using WebApplication.DTO;
 using WebApplication.Models;
@@ -22,14 +23,12 @@ namespace WebApplication.Controllers
             _mapper = mapper;
         }
 
-        //[Authorize]
         [HttpGet("{title}")]
-        public IActionResult SetFavorite(string title)
+        public async Task<IActionResult> SetFavorite(string title)
         {
-            var report = _currencyService.GetWellAsync(title);
+            var report = await _currencyService.GetWellAsync(title);
 
             IEnumerable<CurrencyHistoryVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyHistoryVM>>(report);
-
             IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
             return result;
         }

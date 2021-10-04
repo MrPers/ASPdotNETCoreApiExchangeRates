@@ -1,42 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using AutoMapper;
 using System.Threading.Tasks;
 using WebApplication.DB;
+using WebApplication.DB.Entites;
+using WebApplication.DTO;
+
 namespace WebApplication.Repository
 {
-    public class UserRepository<T> : IUserRepository<T> where T : BaseEntity
+    public class UserRepository : BaseRepository<User, UserDto, long>, IUserRepository
     {
-        private readonly DataContext _context;
-
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, IMapper mapper) : base(context, mapper)
         {
-            _context = context;
         }
 
-        public List<T> GetAll()
+        public async Task<long> Add(UserDto userDto)
         {
-            return _context.Set<T>().ToList();
-        }
-
-        public T GetById(long id)
-        {
-            var result = _context.Set<T>().FirstOrDefault(x => x.Id == id);
-
-            if (result == null)
-            {
-                //todo: need to add logger
-                return null;
-            }
-
-            return result;
-        }
-
-        public async Task<long> Add(T entity)
-        {
-            var result = await _context.Set<T>().AddAsync(entity);
+            var user = _mapper.Map<User>(userDto);
+            await _context.Set<User>().AddAsync(user);
             await _context.SaveChangesAsync();
-            return result.Entity.Id;
+            return user.Id;
         }
+
     }
 }

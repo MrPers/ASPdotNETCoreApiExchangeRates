@@ -13,56 +13,18 @@ namespace WebApplication.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository<User> _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public UserService(IUserRepository<User> userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
             _mapper = mapper;
         }
 
-        //public string Authenticate(string login, string password)
-        //{
-        //    var user = _userRepository
-        //        .GetAll()
-        //        .FirstOrDefault(x => x.Name == login && x.Password == password);
-
-        //    if (user == null)
-        //    {
-        //        // todo: need to add logger
-        //        return null;
-        //    }
-
-        //    var token = _configuration.GenerateJwtToken(user);
-
-        //    return token ;
-        //}
-
-        public async Task<UserDto> Register(UserDto userModel)
+        public async Task<long> RegisterAsync(UserDto userModel)
         {
-            var user = _mapper.Map<User>(userModel);
-
-            var newUserId = await _userRepository.Add(user);
-
-            var newUser = new UserDto
-            {
-                Id = newUserId,
-                Name = user.Name,
-                Password = user.Password
-            };
-
-            return newUser;
-        }
-
-        public IEnumerable<User> GetAll()
-        {
-            return _userRepository.GetAll();
-        }
-
-        public User GetById(int id)
-        {
-            return _userRepository.GetById(id);
+            return await _userRepository.Add(userModel);
         }
     }
 }

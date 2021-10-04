@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using WebApplication.DB;
 using WebApplication.DB.Entites;
 using WebApplication.DTO;
-using WebApplication.Models;
-//using WebApplication.Models;
 
 namespace WebApplication.Repository
 {
@@ -18,14 +14,20 @@ namespace WebApplication.Repository
         {
         }
 
-        public long GetCurrencyIdByName(string name)
+
+        //public long GetCurrencyIdByName(string name)
+        //{
+        //    return _context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
+        //}
+
+        public async Task<long> GetCurrencyIdByName(string name)
         {
-            return this._context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
+            return _context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
         }
 
-        public ICollection<CurrencyHistoryDto> GetHistory(long currencyId)
+        public async Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId)
         {
-            var dbItems = this._context.CurrencyHistories.Where(el => el.CurrencyId == currencyId);
+            var dbItems = _context.CurrencyHistories.Where(el => el.CurrencyId == currencyId);
             return _mapper.Map<ICollection<CurrencyHistoryDto>>(dbItems);
         }
     }
