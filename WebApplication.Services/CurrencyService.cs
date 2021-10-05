@@ -20,6 +20,13 @@ namespace WebApplication.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<CurrencyDto>> GetAll()
+        {
+            var currencyId = _currencyRepository.GetAll();
+
+            return currencyId;
+        }
+
         public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title)
         {
 

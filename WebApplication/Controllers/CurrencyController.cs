@@ -23,7 +23,7 @@ namespace WebApplication.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{title}")]
+        [HttpGet("currency/{title}")]
         public async Task<IActionResult> SetFavorite(string title)
         {
             var report = await _currencyService.GetWellAsync(title);
@@ -33,5 +33,14 @@ namespace WebApplication.Controllers
             return result;
         }
 
+        [HttpGet("currencyhistory")]
+        public async Task<IActionResult> TakeAllCurrencies()
+        {
+            var report = await _currencyService.GetAll();
+
+            IEnumerable<CurrencyVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyVM>>(report);
+            IActionResult result = report == null ? NotFound() : Ok(currencyHistory);
+            return result;
+        }
     }
 }

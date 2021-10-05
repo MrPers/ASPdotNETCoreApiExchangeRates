@@ -7,5 +7,6 @@ namespace WebApplication.Services
     public interface ICurrencyService
     {
         Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title);
+        Task<IEnumerable<CurrencyDto>> GetAll();
     }
 }
