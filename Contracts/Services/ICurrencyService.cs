@@ -8,5 +8,6 @@ namespace WebApplication.Services
     {
         Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title);
         Task<IEnumerable<CurrencyDto>> GetAll();
+        Task<long> RegisterAsync(CurrencyDto currencyDto);
     }
 }

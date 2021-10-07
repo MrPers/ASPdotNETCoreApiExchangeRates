@@ -14,11 +14,13 @@ namespace WebApplication.Repository
         {
         }
 
-
-        //public long GetCurrencyIdByName(string name)
-        //{
-        //    return _context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
-        //}
+        public async Task<long> Add(CurrencyDto currencyDto)
+        {
+            var currency = _mapper.Map<Currency>(currencyDto);
+            await _context.Set<Currency>().AddAsync(currency);
+            await _context.SaveChangesAsync();
+            return currency.Id;
+        }
 
         public async Task<long> GetCurrencyIdByName(string name)
         {

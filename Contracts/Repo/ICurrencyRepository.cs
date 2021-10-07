@@ -9,5 +9,6 @@ namespace WebApplication.Repository
         Task<long> GetCurrencyIdByName(string name);
         //long GetCurrencyIdByName(string name);
         Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId);
+        Task<long> Add(CurrencyDto currencyDto);
     }
 }

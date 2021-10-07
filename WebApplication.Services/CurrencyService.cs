@@ -35,5 +35,10 @@ namespace WebApplication.Services
 
             return currencyHistory;
         }
+
+        public async Task<long> RegisterAsync(CurrencyDto currencyDto)
+        {
+            return await _currencyRepository.Add(currencyDto);
+        }
     }
 }

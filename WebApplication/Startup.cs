@@ -58,7 +58,9 @@ namespace WebApplication
             app.UseRouting();
 
             // подключаем CORS
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            app.UseCors(builder => builder
+            //.WithOrigins("http://localhost:4200/")
+            .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseEndpoints(x => x.MapControllers());
         }
     }
