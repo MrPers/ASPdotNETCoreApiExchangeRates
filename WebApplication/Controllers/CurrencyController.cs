@@ -50,15 +50,7 @@ namespace WebApplication.Controllers
         {
             if (file.FileName.EndsWith(".csv"))
             {
-                using (var sreader = new StreamReader(file.OpenReadStream()))
-                {
-                    string[] headers = sreader.ReadLine().Split(',');
-                    while (!sreader.EndOfStream)
-                    {
-                        string[] rows = sreader.ReadLine().Split(',');
-                        int Id = int.Parse(rows[0].ToString());
-                    }
-                }
+                await _currencyService.RegisterAsync(file);
             }
             else
             {
@@ -73,9 +65,9 @@ namespace WebApplication.Controllers
         public async Task<IActionResult> AddCurrency(Currency currency)
         {
             var dto = _mapper.Map<CurrencyDto>(currency);
-            var createdUserId = await _currencyService.RegisterAsync(dto);
+            var createdId = await _currencyService.RegisterAsync(dto);
 
-            return Ok(createdUserId);
+            return Ok(createdId);
         }
     }
 }

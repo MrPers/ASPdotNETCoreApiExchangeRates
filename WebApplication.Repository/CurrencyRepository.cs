@@ -22,6 +22,14 @@ namespace WebApplication.Repository
             return currency.Id;
         }
 
+        public async Task<long> Add(CurrencyHistoryDto currencyHistoryDto)
+        {
+            var currencyHistory = _mapper.Map<CurrencyHistory>(currencyHistoryDto);
+            await _context.Set<CurrencyHistory>().AddAsync(currencyHistory);
+            await _context.SaveChangesAsync();
+            return currencyHistory.Id;
+        }
+
         public async Task<long> GetCurrencyIdByName(string name)
         {
             return _context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebApplication.DTO;
 
@@ -9,5 +10,6 @@ namespace WebApplication.Services
         Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title);
         Task<IEnumerable<CurrencyDto>> GetAll();
         Task<long> RegisterAsync(CurrencyDto currencyDto);
+        Task<long> RegisterAsync(IFormFile file);
     }
 }
