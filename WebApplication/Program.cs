@@ -34,7 +34,17 @@ namespace WebApplication
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseKestrel(options =>
+                    {
+                        options.Limits.MaxRequestBodySize = long.MaxValue;
+                    })
+                    .UseHttpSys(options =>
+                    {
+                        options.MaxRequestBodySize = long.MaxValue;
+                    })
+                    .UseIISIntegration()
+                    .UseIIS();
                 });
     }
 }

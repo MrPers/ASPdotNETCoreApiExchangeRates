@@ -45,17 +45,21 @@ namespace WebApplication.Controllers
             return result;
         }
 
+        //[DisableRequestSizeLimit]
+        //[RequestSizeLimit(long.MaxValue)]
         [HttpPost("addcurrencyhistory")]
+        //[Route("upload")]
         public async Task<IActionResult> Experimental(IFormFile file)
         {
-            if (file.FileName.EndsWith(".csv"))
-            {
-                await _currencyService.RegisterAsync(file);
-            }
-            else
-            {
-                return BadRequest(new { message = "Bla Bla" });
-            }
+
+            //if (file.FileName.EndsWith(".csv"))
+            //{
+            //    await _currencyService.RegisterAsync(file);
+            //}
+            //else
+            //{
+            //    return BadRequest(new { message = "Bla Bla" });
+            //}
 
             return Ok();
         }

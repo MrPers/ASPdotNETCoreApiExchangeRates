@@ -51,13 +51,13 @@ namespace WebApplication.Services
                     string[] rows = sreader.ReadLine().Split(',');
                     var currencyHistoryDto = new CurrencyHistoryDto
                     {
-                        Buy = double.Parse(rows[0].ToString()),
-                        Sale = double.Parse(rows[0].ToString()),
-                        Data = DateTime.Parse(rows[0].ToString()),
+                        //Buy = double.Parse(rows[0].ToString()),
+                        //Sale = double.Parse(rows[0].ToString()),
+                        //Data = DateTime.Parse(rows[0].ToString()),
                         CurrencyId = currencyId
                     };
 
-                    await _currencyRepository.Add(currencyHistoryDto);
+                    //await _currencyRepository.Add(currencyHistoryDto);
                 }
             }
 

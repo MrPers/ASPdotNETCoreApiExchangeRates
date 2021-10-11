@@ -10,6 +10,7 @@ using WebApplication.Services;
 using WebApplication.Mappings;
 using WebApplication.Repository;
 using WebApplication.DB;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace WebApplication
 {
@@ -24,7 +25,9 @@ namespace WebApplication
 
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.Configure<FormOptions>(options => {
+                options.MultipartBodyLengthLimit = long.MaxValue;
+            });
             services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
             services.AddScoped(typeof(ICurrencyRepository), typeof(CurrencyRepository));
 
@@ -54,7 +57,13 @@ namespace WebApplication
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            //app.UseWhen(context => 
+            //            context.Request.Path.StartsWithSegments("/api"), 
+            //            appBuilder =>
+            //            {
+            //                context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = null;
+            //                //TODO: take next steps
+            //            });
             app.UseRouting();
 
             // подключаем CORS
@@ -62,6 +71,7 @@ namespace WebApplication
             //.WithOrigins("http://localhost:4200/")
             .AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseEndpoints(x => x.MapControllers());
+           
         }
     }
 }
