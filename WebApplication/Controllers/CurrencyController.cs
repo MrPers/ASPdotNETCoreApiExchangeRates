@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,21 +46,19 @@ namespace WebApplication.Controllers
             return result;
         }
 
-        //[DisableRequestSizeLimit]
-        //[RequestSizeLimit(long.MaxValue)]
+        [DisableRequestSizeLimit]
         [HttpPost("addcurrencyhistory")]
-        //[Route("upload")]
         public async Task<IActionResult> Experimental(IFormFile file)
         {
-
-            //if (file.FileName.EndsWith(".csv"))
-            //{
-            //    await _currencyService.RegisterAsync(file);
-            //}
-            //else
-            //{
-            //    return BadRequest(new { message = "Bla Bla" });
-            //}
+            if (file.FileName.EndsWith(".csv"))
+            {
+                if(1 != await _currencyService.RegisterAsync(file))
+                    throw new Exception("no data saved");
+            }
+            else
+            {
+                return BadRequest(new { message = "Bla Bla" });
+            }
 
             return Ok();
         }

@@ -15,7 +15,6 @@ namespace WebApplication.DB
                 int stepCostcurrencyHistories;
 
                 Currency[] currencies = new Currency[] {
-                     new Currency{ Name = "EUR" },
                      new Currency{ Name = "USD" },
                      new Currency{ Name = "RUB" },
                 };
@@ -38,11 +37,13 @@ namespace WebApplication.DB
                                 Buy = (random.Next(2, 10) + stepCostcurrencyHistories),
                                 Data = date.AddDays(i),
                                 CurrencyId = currency.Id
-                            }
-                            );
+                            });
                     }
                 }
                 context.CurrencyHistories.AddRange(currencyHistoriesTime);
+                context.SaveChanges();
+
+                context.Currencies.AddRange(new Currency { Name = "EUR" });
                 context.SaveChanges();
             }
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,25 +15,27 @@ namespace WebApplication.Repository
         {
         }
 
-        public async Task<long> Add(CurrencyDto currencyDto)
+        public async Task<long> Add(CurrencyDto currencyDto, bool save =true)
         {
             var currency = _mapper.Map<Currency>(currencyDto);
             await _context.Set<Currency>().AddAsync(currency);
-            await _context.SaveChangesAsync();
+            if (save)
+                await _context.SaveChangesAsync();
             return currency.Id;
         }
 
-        public async Task<long> Add(CurrencyHistoryDto currencyHistoryDto)
+        public async Task<long> Add(CurrencyHistoryDto currencyHistoryDto, bool save = true)
         {
             var currencyHistory = _mapper.Map<CurrencyHistory>(currencyHistoryDto);
             await _context.Set<CurrencyHistory>().AddAsync(currencyHistory);
-            await _context.SaveChangesAsync();
+            if (save)
+                await _context.SaveChangesAsync();
             return currencyHistory.Id;
         }
 
         public async Task<long> GetCurrencyIdByName(string name)
         {
-            return _context.Currencies.SingleOrDefault(el => el.Name == name)?.Id ?? 0;
+            return (await _context.Currencies.SingleOrDefaultAsync(el => el.Name == name))?.Id ?? 0;
         }
 
         public async Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId)

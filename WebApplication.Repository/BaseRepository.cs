@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using WebApplication.DB;
 using WebApplication.DB.Entites;
 using WebApplication.DTO;
-using WebApplication.Models;
 //using WebApplication.Models;
 
 namespace WebApplication.Repository
@@ -22,7 +21,10 @@ namespace WebApplication.Repository
             _context = context;
             _mapper = mapper;
         }
-
+        public async Task SaveChanges()
+        {
+            await this._context.SaveChangesAsync();
+        }
         public TDto ById(TId id)
         {
             var dbItem = _context.Set<TTable>().Find(id);

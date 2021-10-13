@@ -1,5 +1,6 @@
 ﻿
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication.DTO;
 
 namespace WebApplication.Repository
@@ -8,5 +9,6 @@ namespace WebApplication.Repository
     {
         ICollection<TDto> GetAll();
         TDto ById(TId Id);
+        Task SaveChanges();
     }
 }

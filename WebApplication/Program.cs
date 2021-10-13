@@ -38,10 +38,10 @@ namespace WebApplication
                     .UseKestrel(options =>
                     {
                         options.Limits.MaxRequestBodySize = long.MaxValue;
-                    })
-                    .UseHttpSys(options =>
-                    {
-                        options.MaxRequestBodySize = long.MaxValue;
+                    //})
+                    //.UseHttpSys(options =>
+                    //{
+                    //    options.MaxRequestBodySize = long.MaxValue;
                     })
                     .UseIISIntegration()
                     .UseIIS();
