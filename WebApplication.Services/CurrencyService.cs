@@ -28,10 +28,10 @@ namespace WebApplication.Services
             return currencyId;
         }
 
-        public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title)
+        public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title, string scale, DateTime dtStart, DateTime dtFinal)
         {
             var currencyId = await _currencyRepository.GetCurrencyIdByName(title);
-            var currencyHistory = await _currencyRepository.GetHistory(currencyId);
+            var currencyHistory = await _currencyRepository.GetHistory(currencyId);///kjgkjhgkjgh (dtStart < dtFinal ? (dtStart + '/' + dtFinal) : (dtFinal + '/' + dtStart))
 
             return currencyHistory;
         }
@@ -40,7 +40,7 @@ namespace WebApplication.Services
         {
             return await _currencyRepository.Add(currencyDto);
         }
-        public async Task<long> RegisterAsync(IFormFile file)
+        public async Task RegisterAsync(IFormFile file)
         {
             var currencyId = await _currencyRepository.GetCurrencyIdByName(file.FileName.Split('/')[0]);
             int bacthCount = 5000;
@@ -70,7 +70,6 @@ namespace WebApplication.Services
                     }
                 }
             }
-            return 1;
         }
     }
 }

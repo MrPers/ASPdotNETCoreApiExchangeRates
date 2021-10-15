@@ -26,10 +26,10 @@ namespace WebApplication.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("currencyhistory/{title}")]
-        public async Task<IActionResult> SetFavorite(string title)
+        [HttpGet("currencyhistory/{title}/{scale}/{dtStart}/{dtFinal}")]
+        public async Task<IActionResult> SetFavorite(string title, string scale, DateTime dtStart, DateTime dtFinal)
         {
-            var report = await _currencyService.GetWellAsync(title);
+            var report = await _currencyService.GetWellAsync(title, scale, dtStart, dtFinal);
 
             IEnumerable<CurrencyHistoryVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyHistoryVM>>(report);
             IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
@@ -52,8 +52,7 @@ namespace WebApplication.Controllers
         {
             if (file.FileName.EndsWith(".csv"))
             {
-                if(1 != await _currencyService.RegisterAsync(file))
-                    throw new Exception("no data saved");
+                await _currencyService.RegisterAsync(file);
             }
             else
             {
@@ -62,7 +61,6 @@ namespace WebApplication.Controllers
 
             return Ok();
         }
-
 
         [HttpPost("addcurrency")]
         public async Task<IActionResult> AddCurrency(Currency currency)
