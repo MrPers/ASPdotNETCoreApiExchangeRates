@@ -23,23 +23,29 @@ namespace WebApplication.Services
 
         public async Task<IEnumerable<CurrencyDto>> GetAll()
         {
-            var currencyId = _currencyRepository.GetAll();
+            var currencies = _currencyRepository.GetAll();
 
-            return currencyId;
+            return currencies;
         }
 
-        public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(string title, string scale, DateTime dtStart, DateTime dtFinal)
+        public async Task<CurrencyDto> GetByName(string name)
         {
-            var currencyId = await _currencyRepository.GetCurrencyIdByName(title);
-            var currencyHistory = await _currencyRepository.GetHistory(currencyId);///kjgkjhgkjgh (dtStart < dtFinal ? (dtStart + '/' + dtFinal) : (dtFinal + '/' + dtStart))
+            var currency = await _currencyRepository.GetByName(name);
+            return currency;
+        }
+
+        public async Task<IEnumerable<CurrencyHistoryDto>> GetWellAsync(long currencyId, string scale, DateTime dtStart, DateTime dtFinal)
+        {
+            var currencyHistory = await _currencyRepository.GetHistory(currencyId, scale,  dtStart, dtFinal);
 
             return currencyHistory;
         }
 
-        public async Task<long> RegisterAsync(CurrencyDto currencyDto)
+        public async Task RegisterAsync(CurrencyDto currencyDto)
         {
-            return await _currencyRepository.Add(currencyDto);
+            await _currencyRepository.Add(currencyDto);
         }
+
         public async Task RegisterAsync(IFormFile file)
         {
             var currencyId = await _currencyRepository.GetCurrencyIdByName(file.FileName.Split('/')[0]);

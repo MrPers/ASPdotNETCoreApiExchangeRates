@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication.DB;
@@ -15,13 +18,13 @@ namespace WebApplication.Repository
         {
         }
 
-        public async Task<long> Add(CurrencyDto currencyDto, bool save =true)
+        public async Task Add(CurrencyDto currencyDto, bool save =true)
         {
             var currency = _mapper.Map<Currency>(currencyDto);
+
             await _context.Set<Currency>().AddAsync(currency);
             if (save)
                 await _context.SaveChangesAsync();
-            return currency.Id;
         }
 
         public async Task<long> Add(CurrencyHistoryDto currencyHistoryDto, bool save = true)
@@ -33,15 +36,28 @@ namespace WebApplication.Repository
             return currencyHistory.Id;
         }
 
+        public async Task<CurrencyDto> GetByName(string name)
+        {
+            var currency = await this._context.Currencies.SingleOrDefaultAsync(el => el.Name == name);
+            return _mapper.Map<CurrencyDto>(currency);
+        }
+
         public async Task<long> GetCurrencyIdByName(string name)
         {
             return (await _context.Currencies.SingleOrDefaultAsync(el => el.Name == name))?.Id ?? 0;
         }
 
-        public async Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId)
+        public async Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId, string scale, DateTime dtStart, DateTime dtFinal)
         {
-            var dbItems = _context.CurrencyHistories.Where(el => el.CurrencyId == currencyId);
+                //var currencyId = 2;
+                //var type = "month";
+                //DateTime dtStart = DateTime.ParseExact("2016/01/01", "yyyy/MM/dd", new CultureInfo("fr-FR"));
+                //DateTime Svar = DateTime.ParseExact("2022/05/25", "yyyy/MM/dd", new CultureInfo("fr-FR"));
+                //var dbItems = _context.Set<CurrencyHistory>().FromSqlRaw($"EXEC GetCurrencyHistories '{type}','2016/01/01','2022/05/25',{currencyId}");//.ToList();
+            var dbItems = await _context.GetCurrrencyHistory(currencyId, scale, dtStart.ToString(), dtFinal.ToString());
+
             return _mapper.Map<ICollection<CurrencyHistoryDto>>(dbItems);
         }
     }
+    
 }
