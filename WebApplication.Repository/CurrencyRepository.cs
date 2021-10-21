@@ -49,11 +49,6 @@ namespace WebApplication.Repository
 
         public async Task<ICollection<CurrencyHistoryDto>> GetHistory(long currencyId, string scale, DateTime dtStart, DateTime dtFinal)
         {
-                //var currencyId = 2;
-                //var type = "month";
-                //DateTime dtStart = DateTime.ParseExact("2016/01/01", "yyyy/MM/dd", new CultureInfo("fr-FR"));
-                //DateTime Svar = DateTime.ParseExact("2022/05/25", "yyyy/MM/dd", new CultureInfo("fr-FR"));
-                //var dbItems = _context.Set<CurrencyHistory>().FromSqlRaw($"EXEC GetCurrencyHistories '{type}','2016/01/01','2022/05/25',{currencyId}");//.ToList();
             var dbItems = await _context.GetCurrrencyHistory(currencyId, scale, dtStart.ToString(), dtFinal.ToString());
 
             return _mapper.Map<ICollection<CurrencyHistoryDto>>(dbItems);

@@ -27,10 +27,21 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet("currencyhistory/{title}/{scale}/{dtStart}/{dtFinal}")]
-        public async Task<IActionResult> SetFavorite(string title, string scale, DateTime dtStart, DateTime dtFinal)
+        public async Task<IActionResult> CurrencyHistory(string title, string scale, DateTime dtStart, DateTime dtFinal)
         {
             var currency = await _currencyService.GetByName(title); 
             var report = await _currencyService.GetWellAsync(currency.Id, scale, dtStart, dtFinal);
+
+            IEnumerable<CurrencyHistoryVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyHistoryVM>>(report);
+            IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
+            return result;
+        }
+
+        [HttpGet("currencystatistics/{title}/{scale}/{dtStart}/{dtFinal}")]
+        public async Task<IActionResult> CurrencyStatistics(string title, string scale, DateTime dtStart, DateTime dtFinal)
+        {
+            var currency = await _currencyService.GetByName(title);
+            var report = await _currencyService.StatisticsCurrencyHistory(currency.Id, scale, dtStart, dtFinal);
 
             IEnumerable<CurrencyHistoryVM> currencyHistory = _mapper.Map<IEnumerable<CurrencyHistoryVM>>(report);
             IActionResult result = report == null ? NotFound() : Ok(new object[] { title, currencyHistory });
