@@ -25,7 +25,9 @@ namespace WebApplication.DB
 
         public async Task<List<AnswerCurrencyHistory>> GetCurrrencyHistory(long currencyId, string scale, string dtStart, string dtFinal)
         {
-            return await this.Set<AnswerCurrencyHistory>().FromSqlRaw($"EXEC GetCurrencyHistories '{scale}',{currencyId},'{dtStart}','{dtFinal}'").ToListAsync();
+            return await Set<AnswerCurrencyHistory>().FromSqlRaw($"EXEC GetCurrencyHistories '{scale}',{currencyId},'{dtStart}','{dtFinal}'")
+                .ToListAsync();
+                //.ToArrayAsync<AnswerCurrencyHistory[]>();
         }
     }
 }
