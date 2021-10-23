@@ -79,9 +79,17 @@ namespace WebApplication.Services
             }
         }
 
+
+
+
+
+
+
+
+
+
         private double TrendIdentifying(CurrencyHistoryDto[] dataCH, uint start, uint finish )
         {
-            //double diffMaxMin = 0;
             uint localMiddle = finish - start - 1;
             uint step = 0;
             double localMiddleDegree = 0;
@@ -101,33 +109,28 @@ namespace WebApplication.Services
                 summ += (dataCH[t + 1].Buy - dataCH[t].Buy) * (localMiddleDegree * step);
             }
 
-            //if(summ != 0)
-            //{
-            //    diffMaxMin = summ / localMiddle;
-            //}
-
             return summ;
         }
 
-        private void TrendMaxMin(CurrencyHistoryDto[] dataCH, uint start, uint finish, List<uint> numbers, out uint max, out uint min)
-        {
-            max = start;
-            min = start;
-            for (uint t = start + 1; t < finish; t++)
-            {
-                max = dataCH[t].Buy > dataCH[max].Buy ? t : max;
-                min = dataCH[t].Buy < dataCH[min].Buy ? t : min;
-            }
+        //private void TrendMaxMin(CurrencyHistoryDto[] dataCH, uint start, uint finish, List<uint> numbers, out uint max, out uint min)
+        //{
+        //    max = start;
+        //    min = start;
+        //    for (uint t = start + 1; t < finish; t++)
+        //    {
+        //        max = dataCH[t].Buy > dataCH[max].Buy ? t : max;
+        //        min = dataCH[t].Buy < dataCH[min].Buy ? t : min;
+        //    }
 
-            if (TrendIdentifying(dataCH, min > max ? max : min, finish + 1) > 0)
-            {
-                numbers.Add(min);
-            }
-            else
-            {
-                numbers.Add(max);
-            }
-        }
+        //    if (TrendIdentifying(dataCH, min > max ? max : min, finish + 1) > 0)
+        //    {
+        //        numbers.Add(min);
+        //    }
+        //    else
+        //    {
+        //        numbers.Add(max);
+        //    }
+        //}
 
         private uint TrendMin(CurrencyHistoryDto[] dataCH, uint position, uint min)
         {
@@ -137,6 +140,16 @@ namespace WebApplication.Services
         private uint TrendMax(CurrencyHistoryDto[] dataCH, uint position, uint max)
         {
             return dataCH[position].Buy > dataCH[max].Buy ? position : max;
+        }
+        
+        private double DataTrendMiddle(CurrencyHistoryDto[] dataCH, uint start, uint finish)
+        {
+            double summ = 0;
+            for (uint i = finish; i <= finish; i++)
+            {
+                summ += dataCH[i].Buy;
+            }
+            return summ / (finish - start + 1);
         }
 
         public async Task<IEnumerable<CurrencyHistoryDto>> StatisticsCurrencyHistory(long currencyId, string scale, DateTime dtStart, DateTime dtFinal)
@@ -152,8 +165,10 @@ namespace WebApplication.Services
                 {
                     item.Buy = item.Sale;
                 }
-
-                uint step = 5;// (uint)(dataCH.Length / 10 > 5 ? (dataCH.Length / 10) : 5);
+    
+                //uint step = (uint)(dataCH.Length / 10 > 3 ? (dataCH.Length / 10) : 3);
+                uint step = (uint)(dataCH.Length / 30 > 3 ? (dataCH.Length / 30) : 3);
+                double middleData = 0;
                 uint max = 0;
                 uint min = 0;
                 uint timeCheck = 0;
@@ -166,16 +181,20 @@ namespace WebApplication.Services
                 double localDifference = 0;
                 List<uint> numbers = new List<uint>{0};
 
-                TrendMaxMin(dataCH, 0, step, numbers, out max, out min);
-                localMax = dataCH[max].Buy;
-                localMin = dataCH[min].Buy;
+                //TrendMaxMin(dataCH, 0, step, numbers, out max, out min);
+                //middleData = DataTrendMiddle(dataCH, t - (step - 1), t);
 
-                for (uint t = step; t < dataCH.Length; t++)
+                //localMax = dataCH[max].Buy;
+                //localMin = dataCH[min].Buy;
+
+                for (uint t = 0; t < dataCH.Length - (step - 1); t += (step - 1)) 
                 {
                     //if (6 == t)
                     //{ }
                     trend = localTrend;
                     localTrend = TrendIdentifying(dataCH, min > max ? max : min, t);
+                    middleData = DataTrendMiddle(dataCH, t, t + (step - 1));
+
                     if (localTrend != 0)
                     {
                         localDifference = dataCH[t].Buy - dataCH[t - 1].Buy;
@@ -185,7 +204,7 @@ namespace WebApplication.Services
                             if (localDifference > 0)
                             {
                                 max = TrendMax(dataCH, t, max);
-                                min = TrendMin(dataCH, t, min);
+                                //min = TrendMin(dataCH, t, min);
                             }
                             else
                             {
@@ -211,7 +230,7 @@ namespace WebApplication.Services
                         {
                             if (localDifference < 0)
                             {
-                                max = TrendMax(dataCH, t, max);
+                                //max = TrendMax(dataCH, t, max);
                                 min = TrendMin(dataCH, t, min);
                             }
                             else
