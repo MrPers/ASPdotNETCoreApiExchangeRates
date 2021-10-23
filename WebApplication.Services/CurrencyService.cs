@@ -148,11 +148,17 @@ namespace WebApplication.Services
             {
                 dataCH = currencyHistory.ToArray();
 
-                uint step = (uint)(dataCH.Length / 10 > 5 ? (dataCH.Length / 10) : 5);
+                foreach (var item in dataCH)
+                {
+                    item.Buy = item.Sale;
+                }
+
+                uint step = 5;// (uint)(dataCH.Length / 10 > 5 ? (dataCH.Length / 10) : 5);
                 uint max = 0;
                 uint min = 0;
                 uint timeCheck = 0;
                 double stepTrend;
+                double coefficientTilt = 1.29;
                 double localMax;
                 double localMin;
                 double localTrend = 0;
@@ -166,11 +172,8 @@ namespace WebApplication.Services
 
                 for (uint t = step; t < dataCH.Length; t++)
                 {
-                    if(t == 18)
-                    {
-
-                    }
-
+                    //if (6 == t)
+                    //{ }
                     trend = localTrend;
                     localTrend = TrendIdentifying(dataCH, min > max ? max : min, t);
                     if (localTrend != 0)
@@ -182,16 +185,17 @@ namespace WebApplication.Services
                             if (localDifference > 0)
                             {
                                 max = TrendMax(dataCH, t, max);
+                                min = TrendMin(dataCH, t, min);
                             }
                             else
                             {
-                                var te = (Math.Abs(localDifference) + localTrend) / (Math.Abs(localDifference) > localTrend ? localTrend : Math.Abs(localDifference));
-                                if (te > 2.25)
+                                var te = (Math.Abs(localDifference) + localTrend) / (Math.Abs(localDifference) < localTrend ? localTrend : Math.Abs(localDifference));
+                                if (te > coefficientTilt)
                                 {
                                     //if (timeCheck != max)
                                         numbers.Add(max);
                                     localMax = dataCH[max].Buy;
-                                    if (localMin < dataCH[min].Buy)//
+                                    if (localMin < dataCH[min].Buy && trend != 0)//
                                         numbers.Add(min);
                                     max = t;
                                     timeCheck = t;
@@ -207,17 +211,18 @@ namespace WebApplication.Services
                         {
                             if (localDifference < 0)
                             {
+                                max = TrendMax(dataCH, t, max);
                                 min = TrendMin(dataCH, t, min);
                             }
                             else
                             {
-                                var te = (Math.Abs(localTrend) + localDifference) / (localDifference > Math.Abs(localTrend) ? Math.Abs(localTrend) : localDifference);
-                                if (te > 2.25)
+                                var te = (Math.Abs(localTrend) + localDifference) / (localDifference < Math.Abs(localTrend) ? Math.Abs(localTrend) : localDifference);
+                                if (te > coefficientTilt)
                                 {
                                     //if(timeCheck != min)
                                         numbers.Add(min);
                                     localMin = dataCH[min].Buy;
-                                    if (localMax < dataCH[max].Buy)
+                                    if (localMax < dataCH[max].Buy && trend != 0)
                                         numbers.Add(max);
                                     max = t;
                                     min = t;
@@ -252,20 +257,9 @@ namespace WebApplication.Services
                     stepTrend = (dataCH[numbersDistinct[t + 1]].Buy - dataCH[numbersDistinct[t]].Buy) / (numbersDistinct[t + 1] - numbersDistinct[t]);
                     for (uint i = numbersDistinct[t] + 1; i < numbersDistinct[t + 1]; i++)
                     {
-                        dataCH[i].Buy = 1.48;//dataCH[i - 1].Buy + stepTrend;
+                        dataCH[i].Buy = dataCH[i - 1].Buy + stepTrend;
                     }
                 }
-
-
-                //for (uint i = 0; i < dataCH.Length; i++)
-                //{
-                //    dataCH[i].Buy = null;
-                //}
-                //for (int t = 0; t < numbers.Count - 1; t++)
-                //{
-
-                //}
-
             }
 
             return dataCH;
