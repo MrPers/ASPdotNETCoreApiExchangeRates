@@ -79,171 +79,11 @@ namespace WebApplication.Services
             }
         }
 
-
-        private double DefineTrend(List<CurrencyHistoryDto> dataCH, int start, int finish)
-        {
-            int localMiddle = finish - start;
-            int step = 0;
-            double localMiddleDegree = 0;
-            double summ = 0;
-
-            if (localMiddle > 0)
-            {
-                for (int t = 1; t <= localMiddle; t++)
-                {
-                    step = step + t;
-                }
-
-                localMiddleDegree = 1.0 / step;
-                step = 0;
-
-                for (int t = start; t < finish; t++)
-                {
-                    step++;
-                    summ += (dataCH[t + 1].Buy - dataCH[t].Buy) * (localMiddleDegree * step);
-                }
-
-            }
-
-            return summ;
-        }
-
-        private int TrendMin(List<CurrencyHistoryDto> dataCH, int position, int minDataAddress)
-        {
-            return dataCH[(int)position].Buy < dataCH[(int)minDataAddress].Buy ? position : minDataAddress;
-        }
-
-        private int TrendMax(List<CurrencyHistoryDto> dataCH, int position, int maxDataAddress)
-        {
-            return dataCH[(int)position].Buy > dataCH[(int)maxDataAddress].Buy ? position : maxDataAddress;
-        }
-        
-        private double LocalTrendForceMaxMin(List<CurrencyHistoryDto> dataCH, int start, int finish, out int maxDataAddress, out int minDataAddress)
-        {
-            maxDataAddress = start;
-            minDataAddress = start;
-
-            for (int i = start; i <= finish; i++)
-            {
-                maxDataAddress = dataCH[i].Buy > dataCH[maxDataAddress].Buy ? i : maxDataAddress;
-                minDataAddress = dataCH[i].Buy < dataCH[minDataAddress].Buy ? i : minDataAddress;
-            }
-
-            return DefineTrend(dataCH, start, finish);
-        }
-
-        private List<int> DefinesTrend(
-            List<(double stepTrend, int stepMax, int stepMin, int stepSize, int stepStart)> StoryStep
-            ,List<CurrencyHistoryDto> dataCH
-            ,double coefficientTilt
-            ,List<int> numbers
-            )
-        {
-            List<int> addressTrends = new List<int>();
-            double lastTrend = 0;
-            double trend = StoryStep[0].stepTrend;
-            double trendTilt = 0;
-            int lastValue;
-            int longLastTrend = 0;
-            int maxGlobalAddress = StoryStep[0].stepMax;
-            int minGlobalAddress = StoryStep[0].stepMin;
-            
-            for (int t = 1; t < StoryStep.Count; t++)
-            {
-                longLastTrend++;
-
-                lastTrend = trend;
-                trendTilt =
-                    ( Math.Abs(StoryStep[t].stepTrend) + Math.Abs(trend)) / (Math.Abs(trend) < Math.Abs(StoryStep[t].stepTrend)
-                    ? Math.Abs(StoryStep[t].stepTrend)
-                    : Math.Abs(trend));
-
-                if (trend > 0) 
-                {
-                    if (StoryStep[t].stepTrend < 0 && trendTilt > coefficientTilt && numbers.IndexOf(minGlobalAddress) == -1) 
-                    {
-                        addressTrends.Add(minGlobalAddress);
-                        longLastTrend = 0;
-                    }
-                }
-                else
-                {
-                    if (StoryStep[t].stepTrend > 0 && trendTilt > coefficientTilt && numbers.IndexOf(minGlobalAddress) == -1)
-                    {
-                        addressTrends.Add(maxGlobalAddress);
-                        longLastTrend = 0;
-                    }
-                }
-
-                trend = DefineTrend(dataCH
-                    , StoryStep[t - longLastTrend].stepStart
-                    , StoryStep[t].stepSize + StoryStep[t].stepStart
-                    );
-
-                maxGlobalAddress = TrendMax(dataCH, StoryStep[t].stepMax, StoryStep[t - longLastTrend].stepMax); //maxGlobalAddress);
-                minGlobalAddress = TrendMin(dataCH, StoryStep[t].stepMin, StoryStep[t - longLastTrend].stepMin); //minGlobalAddress);
-            }
-
-            if (lastTrend > 0)
-            {
-                lastValue =
-                    trend > 0
-                    ? StoryStep[StoryStep.Count - 1].stepMax
-                    : maxGlobalAddress;
-            }
-            else
-            {
-                lastValue =
-                    trend < 0
-                    ? StoryStep[StoryStep.Count - 1].stepMin
-                    : minGlobalAddress;
-            }
-
-            addressTrends.Add(lastValue);
-
-            return addressTrends;
-        }
-
-        private List<(double stepTrend, int stepMax, int stepMin, int stepSize, int stepStart)> StoryStepData(List<CurrencyHistoryDto> dataCH, int minSeanseSize, int minLengthData)
-        {
-            int sizeStep = (int)(dataCH.Count / minSeanseSize > minLengthData ? Math.Round((double)(dataCH.Count / minSeanseSize)) : minLengthData);
-            int firstStep = (dataCH.Count - (minLengthData  - 1))  % sizeStep;
-            int maxLocalDataAddress = 0;
-            int minLocalDataAddress = 0; 
-            List<(double stepTrend, int stepMax, int stepMin, int stepSize, int stepStart)> StoryStep
-                = new List<(double stepTrend, int stepMax, int stepMin, int stepSize, int stepStart)>();
-
-            if (firstStep < minLengthData)
-            {
-                firstStep = firstStep + minLengthData;
-                StoryStep.Add(
-                    (LocalTrendForceMaxMin(dataCH, 0, firstStep, out maxLocalDataAddress, out minLocalDataAddress)
-                    , maxLocalDataAddress
-                    , minLocalDataAddress
-                    , firstStep
-                    , 0)
-                    );
-            }
-
-            for (int t = firstStep; t < dataCH.Count - firstStep; t += sizeStep)
-            {
-                StoryStep.Add(
-                    (LocalTrendForceMaxMin(dataCH, t, t + sizeStep, out maxLocalDataAddress, out minLocalDataAddress)
-                    , maxLocalDataAddress
-                    , minLocalDataAddress
-                    , sizeStep
-                    , t)
-                    );
-            }
-            
-            return StoryStep;
-        }
-
         public async Task<IEnumerable<CurrencyHistoryDto>> StatisticsCurrencyHistory(long currencyId, string scale, DateTime dtStart, DateTime dtFinal)
         {
             var currencyHistory = await _currencyRepository.GetHistory(currencyId, scale, dtStart, dtFinal);
             List<CurrencyHistoryDto> dataCH = null;
-            int minLengthData = 2;
+            int minLengthData = 1;
 
             if (currencyHistory.Count > minLengthData)
             {
@@ -255,70 +95,223 @@ namespace WebApplication.Services
                     item.Buy = item.Sale;
                 }
 
-                int minSeanseSize = 55;
-                double coefficientTilt = 1.1;// 1.25;
-                List<int> numbers= new List<int> ();
-                int maxDataAddress = 0;
-                int minDataAddress = 0;
-                double localTrend = 0;
-                int maxLocalDataAddress = 0;
-                int minLocalDataAddress = 0;
+                List<Step> storySteps = FindStoryStepData(dataCH);
 
-                List<(double stepTrend, int stepMax, int stepMin, int stepSize, int stepStart)> StorySteps
-                    = StoryStepData(dataCH, minSeanseSize, minLengthData);
+                (double max, double min) globalAverage = DefineAverage(storySteps);
 
-                List<int> addressTrends;
-                while (true)
-                {
-                    addressTrends = DefinesTrend(StorySteps, dataCH, coefficientTilt, numbers);
-                    addressTrends.Remove(0); 
-                    numbers = new List<int>();
+                List<int> addressTrends = DefinesTrend(storySteps, dataCH, globalAverage);
+                addressTrends.AddRange(new List<int> { 0, dataCH.Count - 1 });
+                addressTrends.Sort();
 
-                    for (int i = 1; i < addressTrends.Count; i++)
-                    {
-                        if(addressTrends[i] - addressTrends[i-1] < minLengthData)
-                        {
-                            numbers.Add(addressTrends[i]);
-                            numbers.Add(addressTrends[i - 1]);
-                        }
-                    }
-                    if(numbers.Count == 0)
-                    {
-                        addressTrends.AddRange(new List<int> { 0, dataCH.Count - 1 });
-                        addressTrends.Sort();
-                        break;
-                    }
-                }
-
-
-
-
-
-                //if (trendTilt > coefficientTilt)
+                //for (int t = 0; t < addressTrends.Count - 1; t++)
                 //{
-                //    if (StoryStep[t].stepTrend < 0)
+                //    //stepTrend = (dataCH[numbersDistinct[t + 1]].Buy - dataCH[numbersDistinct[t]].Buy) / (numbersDistinct[t + 1] - numbersDistinct[t]);
+                //    for (int i = addressTrends[t] + 1; i < addressTrends[t + 1]; i++)
                 //    {
-                //        addressTrends.Add(minGlobalAddress);
+                //        dataCH[i].Buy = 1.48;// dataCH[i - 1].Buy + stepTrend;
                 //    }
-                //    else
-                //    {
-                //        addressTrends.Add(maxGlobalAddress);
-                //    }
-                //    longLastTrend = 0;
                 //}
-
-                for (int t = 0; t < addressTrends.Count - 1; t++)
-                {
-                    //stepTrend = (dataCH[numbersDistinct[t + 1]].Buy - dataCH[numbersDistinct[t]].Buy) / (numbersDistinct[t + 1] - numbersDistinct[t]);
-                    for (int i = addressTrends[t] + 1; i < addressTrends[t + 1]; i++)
-                    {
-                        dataCH[i].Buy = 1.48;// dataCH[i - 1].Buy + stepTrend;
-                    }
-                }
 
             }
 
             return dataCH;
         }
+
+        private class Step
+        {
+            public Step(double trend, int max, int min)
+            {
+                Trend = trend;
+                Max = max;
+                Min = min;
+            }
+
+            public double Trend { get; }
+            public int Max { get; }
+            public int Min { get; }
+        }
+
+        private List<Step> FindStoryStepData(List<CurrencyHistoryDto> dataCH)
+        {
+            List<Step> storyStep = new List<Step>();
+
+            for (int i = 0; i < dataCH.Count - 1; i++)
+            {
+                storyStep.Add(
+                    new Step(dataCH[i + 1].Buy - dataCH[i].Buy
+                    , dataCH[i].Buy > dataCH[i + 1].Buy ? i : i + 1
+                    , dataCH[i].Buy < dataCH[i + 1].Buy ? i : i + 1
+                    ));
+            }
+
+            return storyStep;
+        }
+
+        private (double max, double min) DefineAverage(List<Step> storySteps)
+        {
+            int max = 0;
+            int min = 0;
+            double maxHistory = 0;
+            double minHistory = 0;
+
+            if (storySteps[0].Trend > 0)
+            {
+                max++;
+            }
+            else
+            {
+                min++;
+            }
+
+            for (int t = 0; t < storySteps.Count - 1; t++)
+            {
+                if (storySteps[t].Trend > 0)
+                {
+                    maxHistory += storySteps[t].Trend;
+
+                    if (storySteps[t + 1].Trend < 0)
+                    {
+                        min++;
+                    }
+                }
+                else
+                {
+                    minHistory += storySteps[t].Trend;
+
+                    if (storySteps[t + 1].Trend > 0)
+                    {
+                        max++;
+                    }
+                }
+            }
+
+            if (storySteps[storySteps.Count - 1].Trend < 0)
+            {
+                minHistory += storySteps[storySteps.Count - 1].Trend;
+            }
+            else
+            {
+                maxHistory += storySteps[storySteps.Count - 1].Trend;
+            }
+
+            maxHistory = maxHistory / max;
+            minHistory = minHistory / min;
+
+            return (maxHistory, minHistory);
+        }
+
+        private List<int> DefinesTrend(List<Step> storySteps, List<CurrencyHistoryDto> dataCH, (double max, double min) globalAverage)
+        {
+            List<int> addressTrends = new List<int>();
+            double lastTrend = 0;
+            double trend = storySteps[0].Trend;
+            double trendTilt = 0;
+            int lastValue;
+            int longLastTrend = 0;
+            int maxGlobalAddress = storySteps[0].Max;
+            int minGlobalAddress = storySteps[0].Min;
+
+            //for (int t = 1; t < StoryStep.Count; t++)
+            //{
+            //    longLastTrend++;
+
+            //    lastTrend = trend;
+            //    trendTilt =
+            //        (Math.Abs(StoryStep[t].stepTrend) + Math.Abs(trend)) / (Math.Abs(trend) < Math.Abs(StoryStep[t].stepTrend)
+            //        ? Math.Abs(StoryStep[t].stepTrend)
+            //        : Math.Abs(trend));
+
+            //    if (trend > 0)
+            //    {
+            //        if (StoryStep[t].stepTrend < 0 && trendTilt > coefficientTilt)
+            //        {
+            //            addressTrends.Add(minGlobalAddress);
+            //            longLastTrend = 0;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        if (StoryStep[t].stepTrend > 0 && trendTilt > coefficientTilt)
+            //        {
+            //            addressTrends.Add(maxGlobalAddress);
+            //            longLastTrend = 0;
+            //        }
+            //    }
+
+            //    trend = DefineTrend(dataCH
+            //        , StoryStep[t - longLastTrend].stepStart
+            //        , StoryStep[t].stepSize + StoryStep[t].stepStart
+            //        );
+
+            //    maxGlobalAddress = TrendMax(dataCH, StoryStep[t].stepMax, StoryStep[t - longLastTrend].stepMax); //maxGlobalAddress);
+            //    minGlobalAddress = TrendMin(dataCH, StoryStep[t].stepMin, StoryStep[t - longLastTrend].stepMin); //minGlobalAddress);
+            //}
+
+            //if (lastTrend > 0)
+            //{
+            //    lastValue =
+            //        trend > 0
+            //        ? StoryStep[StoryStep.Count - 1].stepMax
+            //        : maxGlobalAddress;
+            //}
+            //else
+            //{
+            //    lastValue =
+            //        trend < 0
+            //        ? StoryStep[StoryStep.Count - 1].stepMin
+            //        : minGlobalAddress;
+            //}
+
+            //addressTrends.Add(lastValue);
+
+            return addressTrends;
+        }
+
+
+        private double DefineTrend(List<CurrencyHistoryDto> dataCH, int start, int finish)
+        {
+            int localMiddle = finish - start;
+            //int step = 0;
+            //double localMiddleDegree = 0;
+            double summ = 0;
+
+            if (localMiddle > 0)
+            {
+                //for (int t = 1; t <= localMiddle; t++)
+                //{
+                //    step = step + t;
+                //}
+
+                //localMiddleDegree = 1.0 / step;
+                //step = 0;
+
+                //for (int t = start; t < finish; t++)
+                //{
+                //    step++;
+                //    summ += (dataCH[t + 1].Buy - dataCH[t].Buy) * (localMiddleDegree * step);
+                //}
+
+
+                for (int t = start; t < finish; t++)
+                {
+                    summ += dataCH[t + 1].Buy - dataCH[t].Buy;
+                }
+
+            }
+
+            return summ;
+        }
+
+        private int TrendMin(List<CurrencyHistoryDto> dataCH, int position, int minDataAddress)
+        {
+            return dataCH[position].Buy < dataCH[minDataAddress].Buy ? position : minDataAddress;
+        }
+
+        private int TrendMax(List<CurrencyHistoryDto> dataCH, int position, int maxDataAddress)
+        {
+            return dataCH[position].Buy > dataCH[maxDataAddress].Buy ? position : maxDataAddress;
+        }
+
+
     }
 }
