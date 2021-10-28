@@ -84,6 +84,7 @@ namespace WebApplication.Services
             var currencyHistory = await _currencyRepository.GetHistory(currencyId, scale, dtStart, dtFinal);
             List<CurrencyHistoryDto> dataCH = null;
             int minLengthData = 1;
+            double differenceBetweenTrend;
 
             if (currencyHistory.Count > minLengthData)
             {
@@ -99,18 +100,24 @@ namespace WebApplication.Services
 
                 (double max, double min) globalAverage = DefineAverage(storySteps);
 
-                List<int> addressTrends = DefinesTrend(storySteps, dataCH, globalAverage);
-                addressTrends.AddRange(new List<int> { 0, dataCH.Count - 1 });
-                addressTrends.Sort();
+                Stack<int> addressTrends = DefinesTrend(dataCH, globalAverage);
 
                 //for (int t = 0; t < addressTrends.Count - 1; t++)
-                //{
-                //    //stepTrend = (dataCH[numbersDistinct[t + 1]].Buy - dataCH[numbersDistinct[t]].Buy) / (numbersDistinct[t + 1] - numbersDistinct[t]);
-                //    for (int i = addressTrends[t] + 1; i < addressTrends[t + 1]; i++)
-                //    {
-                //        dataCH[i].Buy = 1.48;// dataCH[i - 1].Buy + stepTrend;
-                //    }
-                //}
+                while(addressTrends.Count > 0)
+                {
+                    var con = addressTrends.Pop();
+                    var neCon = addressTrends.Peek();
+                    if (addressTrends.Count == 1)
+                    {
+                        neCon = addressTrends.Pop();
+                    }
+
+                    differenceBetweenTrend = (dataCH[con].Buy - dataCH[neCon].Buy) / (con - neCon);
+                    for (int i = neCon + 1; i < con; i++)
+                    {
+                        dataCH[i].Buy = dataCH[i - 1].Buy + differenceBetweenTrend;
+                    }
+                }
 
             }
 
@@ -200,72 +207,59 @@ namespace WebApplication.Services
             return (maxHistory, minHistory);
         }
 
-        private List<int> DefinesTrend(List<Step> storySteps, List<CurrencyHistoryDto> dataCH, (double max, double min) globalAverage)
+        private Stack<int> DefinesTrend(List<CurrencyHistoryDto> dataCH, (double max, double min) globalAverage)
         {
-            List<int> addressTrends = new List<int>();
-            double lastTrend = 0;
-            double trend = storySteps[0].Trend;
-            double trendTilt = 0;
-            int lastValue;
-            int longLastTrend = 0;
-            int maxGlobalAddress = storySteps[0].Max;
-            int minGlobalAddress = storySteps[0].Min;
+            int longTrend = 0;
+            Stack<int> address = new Stack<int>();
+            address.Push(0);
 
-            //for (int t = 1; t < StoryStep.Count; t++)
-            //{
-            //    longLastTrend++;
+            for (int t = 1; t < dataCH.Count - 1; t++)
+            {
+                longTrend++;
+                
+                if (address.Count > 0)
+                {
+                    if (Math.Abs(dataCH[t].Buy - dataCH[address.Peek()].Buy) > Math.Abs(dataCH[address.Peek()].Buy - dataCH[t - longTrend].Buy))
+                    {
+                        longTrend = t - address.Peek();
+                    }
+                }
 
-            //    lastTrend = trend;
-            //    trendTilt =
-            //        (Math.Abs(StoryStep[t].stepTrend) + Math.Abs(trend)) / (Math.Abs(trend) < Math.Abs(StoryStep[t].stepTrend)
-            //        ? Math.Abs(StoryStep[t].stepTrend)
-            //        : Math.Abs(trend));
+                if ((dataCH[t + 1].Buy - dataCH[t].Buy < 0 && 
+                    dataCH[t].Buy - dataCH[t - longTrend].Buy > globalAverage.max)
+                    || (dataCH[t + 1].Buy - dataCH[t].Buy > 0 && 
+                    dataCH[t].Buy - dataCH[t - longTrend].Buy < globalAverage.min
+                   ))
+                {
+                    if(address.Peek() != t - longTrend) address.Push(t - longTrend);
+                    longTrend = 0;
+                }
+            }
 
-            //    if (trend > 0)
-            //    {
-            //        if (StoryStep[t].stepTrend < 0 && trendTilt > coefficientTilt)
-            //        {
-            //            addressTrends.Add(minGlobalAddress);
-            //            longLastTrend = 0;
-            //        }
-            //    }
-            //    else
-            //    {
-            //        if (StoryStep[t].stepTrend > 0 && trendTilt > coefficientTilt)
-            //        {
-            //            addressTrends.Add(maxGlobalAddress);
-            //            longLastTrend = 0;
-            //        }
-            //    }
+            if (dataCH[dataCH.Count - (longTrend + 1)].Buy - dataCH[dataCH.Count - 1].Buy > globalAverage.max 
+                || dataCH[dataCH.Count - (longTrend + 1)].Buy - dataCH[dataCH.Count - 1].Buy < globalAverage.min
+                )
+            {
+                address.Push(dataCH.Count - (longTrend + 1));
+            }
 
-            //    trend = DefineTrend(dataCH
-            //        , StoryStep[t - longLastTrend].stepStart
-            //        , StoryStep[t].stepSize + StoryStep[t].stepStart
-            //        );
+            address.Push(dataCH.Count - 1);
 
-            //    maxGlobalAddress = TrendMax(dataCH, StoryStep[t].stepMax, StoryStep[t - longLastTrend].stepMax); //maxGlobalAddress);
-            //    minGlobalAddress = TrendMin(dataCH, StoryStep[t].stepMin, StoryStep[t - longLastTrend].stepMin); //minGlobalAddress);
-            //}
-
-            //if (lastTrend > 0)
-            //{
-            //    lastValue =
-            //        trend > 0
-            //        ? StoryStep[StoryStep.Count - 1].stepMax
-            //        : maxGlobalAddress;
-            //}
-            //else
-            //{
-            //    lastValue =
-            //        trend < 0
-            //        ? StoryStep[StoryStep.Count - 1].stepMin
-            //        : minGlobalAddress;
-            //}
-
-            //addressTrends.Add(lastValue);
-
-            return addressTrends;
+            return address;
         }
+        
+        private double FindTrend(List<CurrencyHistoryDto> dataCH, int start, int finish)//  bool flagPositiveTrend = true)
+        {
+            double summ = 0;
+
+            for (int t = start; t < finish; t++)
+            {
+                summ += dataCH[t + 1].Buy - dataCH[t].Buy;
+            }
+
+            return summ;
+        }
+
 
 
         private double DefineTrend(List<CurrencyHistoryDto> dataCH, int start, int finish)
