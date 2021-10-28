@@ -201,6 +201,9 @@ namespace WebApplication.Services
                 maxHistory += storySteps[storySteps.Count - 1].Trend;
             }
 
+            //if(Math.Abs(minHistory) / maxHistory > maxHistory / Math.Abs(minHistory)
+            //    > 3)
+
             maxHistory = maxHistory / max;
             minHistory = minHistory / min;
 
@@ -215,30 +218,49 @@ namespace WebApplication.Services
 
             for (int t = 1; t < dataCH.Count - 1; t++)
             {
-                longTrend++;
-                
-                if (address.Count > 0)
+                if (t == 14)
                 {
-                    if (Math.Abs(dataCH[t].Buy - dataCH[address.Peek()].Buy) > Math.Abs(dataCH[address.Peek()].Buy - dataCH[t - longTrend].Buy))
-                    {
-                        longTrend = t - address.Peek();
-                    }
+
                 }
+
+                longTrend++;
+
+                //if (address.Count > 1)
+                //{
+                //    var fg = address.Pop();
+                //    if ((dataCH[address.Peek()].Buy - dataCH[fg].Buy > 0
+                //        && dataCH[address.Peek()].Buy - dataCH[t - longTrend].Buy > 0)
+                //    || (dataCH[address.Peek()].Buy - dataCH[fg].Buy < 0
+                //        && dataCH[address.Peek()].Buy - dataCH[t - longTrend].Buy < 0))
+                //    {
+
+                //    }
+                //    else
+                //    {
+                //        address.Push(fg);
+                //    }
+                //}
+
+                //if (Math.Abs(dataCH[t].Buy - dataCH[address.Peek()].Buy) > Math.Abs(dataCH[address.Peek()].Buy - dataCH[t - longTrend].Buy))
+                //{
+                //    longTrend = t - address.Peek();
+                //}
 
                 if ((dataCH[t + 1].Buy - dataCH[t].Buy < 0 && 
                     dataCH[t].Buy - dataCH[t - longTrend].Buy > globalAverage.max)
-                    || (dataCH[t + 1].Buy - dataCH[t].Buy > 0 && 
-                    dataCH[t].Buy - dataCH[t - longTrend].Buy < globalAverage.min
-                   ))
+                   ||dataCH[t + 1].Buy - dataCH[t].Buy > 0 && 
+                    dataCH[t].Buy - dataCH[t - longTrend].Buy < globalAverage.min)
                 {
-                    if(address.Peek() != t - longTrend) address.Push(t - longTrend);
+                    if (address.Peek() != t - longTrend)
+                    {
+                        address.Push(t - longTrend);
+                    }
                     longTrend = 0;
                 }
             }
 
             if (dataCH[dataCH.Count - (longTrend + 1)].Buy - dataCH[dataCH.Count - 1].Buy > globalAverage.max 
-                || dataCH[dataCH.Count - (longTrend + 1)].Buy - dataCH[dataCH.Count - 1].Buy < globalAverage.min
-                )
+            || dataCH[dataCH.Count - (longTrend + 1)].Buy - dataCH[dataCH.Count - 1].Buy < globalAverage.min)
             {
                 address.Push(dataCH.Count - (longTrend + 1));
             }
