@@ -100,6 +100,8 @@ namespace WebApplication.Services
 
                 List<int> addressTrends = DefineTrend(dataCH);
 
+                addressTrends = OptimizingGraphics(dataCH, addressTrends, globalAverage);
+
                 dataCH = EditingGraph(dataCH, addressTrends);
 
             }
@@ -206,13 +208,78 @@ namespace WebApplication.Services
             return dataCH;
         }
 
-        private List<CurrencyHistoryDto> OptimizingGraphics(List<CurrencyHistoryDto> dataCH, (double max, double min) globalAverage)
+        private List<int> OptimizingGraphics(List<CurrencyHistoryDto> dataCH, List<int> addressTrends, (double max, double min) globalAverage)
         {
+            bool r = false;
 
+            //все что меньше мах и мин
+            double tr;
+            for (int i = 0; i < addressTrends.Count - 1; i++)
+            {
+                //if (addressTrends[i] == 222)
+                //{
+                //}
+                if (r)
+                {
+                    i--;
+                }
+                r = false;
+                tr = dataCH[addressTrends[i + 1]].Buy - dataCH[addressTrends[i]].Buy;
+                if (!(tr > 0 && tr > globalAverage.max
+                    || tr < 0 && tr < globalAverage.min))
+                {
+                    addressTrends.RemoveAt(i);
+                    addressTrends.RemoveAt(i);
+                    r = true;
+                }
+            }
 
-            return dataCH;
+            //объединить одинаковые тенденции
+            //for (int t = 1; t < addressTrends.Count - 1; t++)
+            //{
+            //    if (!((dataCH[addressTrends[t]].Buy - dataCH[addressTrends[t + 1]].Buy < 0
+            //        && dataCH[addressTrends[t - 1]].Buy - dataCH[addressTrends[t]].Buy > 0)
+            //        || (dataCH[addressTrends[t]].Buy - dataCH[addressTrends[t + 1]].Buy > 0
+            //        && dataCH[addressTrends[t - 1]].Buy - dataCH[addressTrends[t]].Buy < 0)))
+            //    {
+            //        addressTrends.RemoveAt(t);
+            //    }
+            //}
+
+            //средняя тенденция
+            //for (int i = 0; i < addressTrends.Count - 3; i++)
+            //{
+            //    if (addressTrends[i] == 35)
+            //    {
+            //    }
+            //    if (r)
+            //    {
+            //        i--;
+            //    }
+            //    r = false;
+            //    if(dataCH[addressTrends[i]].Buy > dataCH[addressTrends[i + 2]].Buy && dataCH[addressTrends[i + 1]].Buy > dataCH[addressTrends[i + 3]].Buy
+            //        || dataCH[addressTrends[i]].Buy < dataCH[addressTrends[i + 2]].Buy && dataCH[addressTrends[i + 1]].Buy < dataCH[addressTrends[i + 3]].Buy)
+            //    {
+            //        addressTrends.RemoveAt(i + 1);
+            //        addressTrends.RemoveAt(i + 1);
+            //        r = true;
+            //    }
+            //    else
+            //    {
+            //        if (dataCH[addressTrends[i]].Buy > dataCH[addressTrends[i + 2]].Buy && dataCH[addressTrends[i + 1]].Buy < dataCH[addressTrends[i + 3]].Buy
+            //            || dataCH[addressTrends[i]].Buy < dataCH[addressTrends[i + 2]].Buy && dataCH[addressTrends[i + 1]].Buy > dataCH[addressTrends[i + 3]].Buy)
+            //        {
+            //            addressTrends.RemoveAt(i + 2);
+            //            addressTrends.RemoveAt(i + 2);
+            //        }
+            //        else
+            //        {
+            //        }
+            //    }
+            //    }
+
+            return addressTrends;
         }
-
 
         private Stack<int> DefinesTrend(List<CurrencyHistoryDto> dataCH, (double max, double min) globalAverage)
         {
@@ -279,9 +346,6 @@ namespace WebApplication.Services
             return address;
         }
 
-
-
-
         private double FindTrend(List<CurrencyHistoryDto> dataCH, int start, int finish)//  bool flagPositiveTrend = true)
         {
             double summ = 0;
@@ -293,7 +357,6 @@ namespace WebApplication.Services
 
             return summ;
         }
-
 
         private int TrendMax(List<CurrencyHistoryDto> dataCH, int position, int maxDataAddress)
         {
